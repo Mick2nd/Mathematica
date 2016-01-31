@@ -1,0 +1,3753 @@
+(* Content-type: application/mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 7.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       145,          7]
+NotebookDataLength[    152553,       3744]
+NotebookOptionsPosition[    144554,       3530]
+NotebookOutlinePosition[    145302,       3557]
+CellTagsIndexPosition[    145172,       3551]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[TextData[{
+ StyleBox["Notebook useLAGR", "Title",
+  FontSize->24],
+ "\n\n",
+ StyleBox["Purpose: \tUsed to generate the Lagrange Equations based on the \
+Module LAGR.m\nAuthor:\t\tJ\[UDoubleDot]rgen Habelt\nDate:\t\t2014-02-28\n\n",
+  FontWeight->"Plain"],
+ StyleBox["About History", "Subsubtitle",
+  FontWeight->"Plain"],
+ StyleBox["\n",
+  FontWeight->"Plain"],
+ StyleBox["Originally, in my Diploma work 1978, I created a program for \
+\"Computer Assisted Generation of the LAGRANGE Equations of a Holonomic Rigid \
+Body System\". It was written in the computer language PL1/FORMAC and run on \
+the IBM 360 system.\nIn 2013 I decided to rewrite my Diploma work as Word \
+document and to port the original PL1/FORMAC program to Mathematica. The \
+result was the module LAGR.m and this notebook used to aim the usage of this \
+module.\nFor a better understanding, please refer to the Diploma work at ", 
+  "ItemParagraph",
+  FontWeight->"Plain"],
+ ButtonBox["http://www.juergen.habelt-jena.de/en",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://www.juergen.habelt-jena.de/en"], None},
+  ButtonNote->"http://www.juergen.habelt-jena.de/en"],
+ StyleBox["\n", "ItemParagraph",
+  FontWeight->"Plain"],
+ StyleBox["\n",
+  FontWeight->"Plain"],
+ StyleBox["Usage Instructions", "Subsubtitle",
+  FontWeight->"Plain"],
+ StyleBox["\n",
+  FontWeight->"Plain"],
+ StyleBox["1. At first time you should install the module LAGR.m. It should \
+reside in a folder named Mechanics.\n   Copy the folder Mechanics inside \
+Lagr.zip to Mathematica's Applications folder\n   Copy the notebook and input \
+sample file to your notebook folder\n2. Load the module using the Needs \
+instruction below.\n3. Prepare the input/output.\n", "ItemNumbered",
+  FontWeight->"Plain"],
+ StyleBox["3.1. Invoke the chooseLocations function\n3.2. Prepare an input \
+file as plain text file.\n3.3. Browse for the input file.\n3.4. Browse for / \
+define the output file.\n", "SubitemNumbered",
+  FontWeight->"Plain"],
+ StyleBox["4. Invoke the lagr function to calculate the Lagrange Equations in \
+form of coefficients.\n5. Inspect the results either in this notebook or in \
+the output file defined earlier.\n\n", "ItemNumbered",
+  FontWeight->"Plain"],
+ StyleBox["Sample Input File\n\n", "Subsubtitle",
+  FontWeight->"Plain"],
+ StyleBox["(*\n\tThis is the system from the Diploma Work with\n\t- 3 bodies\n\
+\t- 3 degrees of freedom\n\t- relative description of movement\n\t- 2 springs\
+\n\t- 1 damper\n*)\n\n3\n3\nTrue\n\n\
+(*--------------------------------------------------------------------*)\n\n\
+{{1.,0.,0.},\t\t\t\t(* Rotation Matrix body 0 *) \n {0.,1.,0.}, \n \
+{0.,0.,1.}}\n\n{fu[q[0]],0.,0.}\t\t\t(* Origin of body 0 *)\n\n\
+(*--------------------------------------------------------------------*)\n\n0\
+\t\t\t\t\t\t\t(* Relation body of body 1 *)\n\n{{1.,0.,0.},\t\t\t\t(* \
+Relative Rotation matrix *)\n {0.,1.,0.},\n {0.,0.,1.}}\n  \n{q[1],0.,0.}\t\t\
+\t\t(* Distance vector *)\n  \n{0.,0.,0.}\t\t\t\t\t(* Fixed point body 0 *)\n \
+ \n{0.,0.,0.}\t\t\t\t\t(* Fixed point body 1 *)\n  \nFalse\t\t\t\t\t\t(* No \
+Forces and Moments *)\n  \n\
+(*--------------------------------------------------------------------*)\n  \n\
+1\t\t\t\t\t\t\t(* Relation body of body 2 *)\n  \n{{Cos[q[2]], Sin[q[2]],0.},\
+\t(* Relative Rotation matrix *) \n {-Sin[q[2]],Cos[q[2]],0.},\n {0.,        \
+0.,       1.}}\n \n{0.,0.,0.}\t\t\t\t\t(* Distance vector *)\n\n{0.,0.,0.}\t\t\
+\t\t\t(* Fixed point body 1 *)\n\n{0.,r,0.}\t\t\t\t\t(* Fixed point body 2 *)\
+\n\nTrue\t\t\t\t\t\t(* Forces and Moments input *)\n\n{En[2][[2,1]] * c[2,3] \
+* (lambda[2,3] + q[3] - xs[2,3,2]),\n En[2][[2,2]] * c[2,3] * (lambda[2,3] + \
+q[3] - xs[2,3,2]) - m[2] * g,\n 0.}\n\n{0.,0.,0.}\n\n\
+(*--------------------------------------------------------------------*)\n\n2\
+\t\t\t\t\t\t\t(* Relation body of body 3 *)\n\n{{1.,0.,0.},\t\t\t\t(* \
+Relative Rotation matrix *)\n {0.,1.,0.},\n {0.,0.,1.}}\n \n{0.,q[3],0.}\t\t\t\
+\t(* Distance vector *)\n\n{0.,0.,0.}\t\t\t\t\t(* Fixed point body 2 *)\n\n\
+{0.,0.,0.}\t\t\t\t\t(* Fixed point body 3 *)\n\nTrue\t\t\t\t\t\t(* Forces and \
+Moments input *)\n{-1.0 * En[3][[2,1]] * c[2,3] * (lambda[2,3] + q[3] - \
+xs[2,3,2]),\n -1.0 * En[3][[2,2]] * c[2,3] * (lambda[2,3] + q[3] - xs[2,3,2]) \
+- m[3] * g,\n 0.}\n \n{0.,0.,0.}\n\n\
+(*--------------------------------------------------------------------*)\n\n1\
+\t\t\t\t\t\t\t(* Springs *)\n\n0\n1\n{xs[0,1,1]->0,\nxs[0,1,2]->0,\n\
+xs[0,1,3]->0,\nxs[1,0,2]->0,\nxs[1,0,3]->0\n}\n{\n\
+Assumptions->-1.0*q[1]-1.0*xs[1,0,1]>0}\n\n\
+(*--------------------------------------------------------------------*)\n\n1\
+\t\t\t\t\t\t\t(* Dampers *)\n\n2\n3\n{\nxd[3,2,1]->0,\nxd[3,2,2]->0,\n\
+xd[3,2,3]->0,\nxd[2,3,1]->0,\nxd[2,3,2]->0,\nxd[2,3,3]->0}\n\n\
+(*--------------------------------------------------------------------*)\n\n1\
+\t\t\t\t\t\t\t(* Special Cases *)\n\n{\nm[1]->0,\n\[Theta][3,1,1]->0,\n\
+\[Theta][3,1,2]->0,\n\[Theta][3,1,3]->0,\n\[Theta][3,2,2]->0,\n\
+\[Theta][3,2,3]->0,\n\[Theta][3,3,3]->0\n}\n", "Code",
+  FontFamily->"Lucida Console",
+  FontWeight->"Plain",
+  Background->RGBColor[1, 1, 0.85]]
+}], "Input",
+ PageWidth->WindowWidth,
+ CellChangeTimes->{
+  3.6025765257682033`*^9, {3.602576715854537*^9, 3.6025767502681975`*^9}, {
+   3.602576872681613*^9, 3.6025770159834642`*^9}, {3.6025770575731373`*^9, 
+   3.6025770580879383`*^9}, {3.60257709892881*^9, 3.6025771477256956`*^9}, {
+   3.6025771989093857`*^9, 3.6025773839881105`*^9}, {3.6025774404628105`*^9, 
+   3.602577699033265*^9}, {3.602577735412529*^9, 3.602577784349815*^9}, {
+   3.602577822476282*^9, 3.602577908120432*^9}, {3.602577968258538*^9, 
+   3.602578138766837*^9}, {3.602578194630535*^9, 3.6025782167981744`*^9}, {
+   3.6025782862338963`*^9, 3.6025784197389307`*^9}, {3.6025786688089685`*^9, 
+   3.6025787104142413`*^9}, {3.6025788546052947`*^9, 3.602578855463296*^9}, {
+   3.602579347706561*^9, 3.602579584546177*^9}, {3.6025796737615337`*^9, 
+   3.602579811650176*^9}, {3.6025798698850784`*^9, 3.602580016618936*^9}, {
+   3.6025800685982275`*^9, 3.602580151434373*^9}, {3.6025801850680323`*^9, 
+   3.602580332488291*^9}, {3.602580363719546*^9, 3.602580517972617*^9}, {
+   3.602581719749533*^9, 3.6025817312779536`*^9}, 3.6025818606801805`*^9, {
+   3.6025821582819033`*^9, 3.602582192196363*^9}, {3.60258223600124*^9, 
+   3.602582248543662*^9}, {3.6025823212865896`*^9, 3.6025824258379736`*^9}, {
+   3.628946419482523*^9, 3.6289464225296144`*^9}, {3.628946474392943*^9, 
+   3.628946474392943*^9}, {3.628946519853736*^9, 3.6289465666541767`*^9}, {
+   3.6289466557890835`*^9, 3.6289467936701326`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"<<", "Mechanics`"}]], "Input",
+ CellChangeTimes->{{3.583510228540464*^9, 3.583510256698513*^9}, {
+  3.5883259091920714`*^9, 3.5883259104890175`*^9}, {3.602576503678564*^9, 
+  3.602576516938588*^9}, {3.628947269433625*^9, 3.628947272261981*^9}, {
+  3.6289476310705643`*^9, 3.62894763636786*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["\<\"Package Mechanics - used to calculate the Euler - Lagrange \
+- Equations\"\>"], "Print",
+ CellChangeTimes->{3.6289472772779703`*^9, 3.6289473125462837`*^9, 
+  3.6289476399149866`*^9, 3.646902762543688*^9, 3.646914790300516*^9}],
+
+Cell[BoxData["\<\"Exports the functions chooseLocations and lagr\"\>"], \
+"Print",
+ CellChangeTimes->{3.6289472772779703`*^9, 3.6289473125462837`*^9, 
+  3.6289476399149866`*^9, 3.646902762543688*^9, 3.646914790300516*^9}],
+
+Cell[BoxData["\<\"For more information click on the Documentation link \
+below\"\>"], "Print",
+ CellChangeTimes->{3.6289472772779703`*^9, 3.6289473125462837`*^9, 
+  3.6289476399149866`*^9, 3.646902762543688*^9, 3.646914790300516*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ TagBox[
+  ButtonBox[
+   PaneSelectorBox[{False->"\<\"Documentation\"\>", True->
+    StyleBox["\<\"Documentation\"\>", "HyperlinkActive"]}, Dynamic[
+     CurrentValue["MouseOver"]],
+    BaseStyle->{"Hyperlink"},
+    FrameMargins->0,
+    ImageSize->Automatic],
+   BaseStyle->"Link",
+   ButtonData->"paclet:Mechanics",
+   ButtonNote->"paclet:Mechanics"],
+  Annotation[#, "paclet:Mechanics", "Hyperlink"]& ]], "Output",
+ CellChangeTimes->{3.628947277293597*^9, 3.6289473126556673`*^9, 
+  3.628947639946241*^9, 3.646902762559315*^9, 3.646914790316141*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "chooseLocations"}]], "Input",
+ CellChangeTimes->{{3.583665406156128*^9, 3.583665419852952*^9}, {
+  3.602578450814185*^9, 3.6025784561181946`*^9}}],
+
+Cell[BoxData[
+ StyleBox["\<\"Used to locate the input / output files.\\nFirst call this \
+function, then use the buttons to invoke the File Open / File Save dialogs.\"\
+\>", "MSG"]], "Print", "PrintUsage",
+ CellChangeTimes->{3.62894735940923*^9},
+ CellTags->"Info3628950959-8644209"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"chooseLocations", "[", "]"}]], "Input",
+ CellChangeTimes->{{3.5835104393784337`*^9, 3.5835104568192644`*^9}, {
+   3.583510679317455*^9, 3.5835106796294556`*^9}, 3.583510718769924*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   TemplateBox[{Dynamic[Mechanics`LAGR`Private`inputFn],"Open",All},
+    "FileNameSetterBoxes"], ",", 
+   DynamicBox[ToBoxes[Mechanics`LAGR`Private`inputFn, StandardForm],
+    ImageSizeCache->{210., {2., 8.}}]}], "}"}]], "Print",
+ CellChangeTimes->{3.5835106817666593`*^9, 3.5835107222955303`*^9, 
+  3.583510948656129*^9, 3.583558147332471*^9, 3.583558433414974*^9, 
+  3.5835589620531025`*^9, 3.5835603990669355`*^9, 3.5835607866232166`*^9, 
+  3.5835609915875764`*^9, 3.583561688689602*^9, 3.5835783010920095`*^9, 
+  3.5835789356067247`*^9, 3.583579833541902*^9, 3.5835800659255104`*^9, 
+  3.5835809769267116`*^9, 3.583581153628222*^9, 3.5835830526179585`*^9, 
+  3.583593580198883*^9, 3.58359429567774*^9, 3.583643431773028*^9, 
+  3.583644348427038*^9, 3.583665373614471*^9, 3.5883275376869087`*^9, 
+  3.588394994134838*^9, 3.588395580009088*^9, 3.588482415512702*^9, 
+  3.5885668609733086`*^9, 3.588567072634974*^9, 3.5885689297932816`*^9, 
+  3.588697182484661*^9, 3.589992033675784*^9, 3.602576159527959*^9, 
+  3.602581511462764*^9, 3.628947394052497*^9, 3.628947666026353*^9, 
+  3.6469027761228743`*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   TemplateBox[{Dynamic[Mechanics`LAGR`Private`outputFn],"Save",All},
+    "FileNameSetterBoxes"], ",", 
+   DynamicBox[ToBoxes[Mechanics`LAGR`Private`outputFn, StandardForm],
+    ImageSizeCache->{217., {2., 8.}}]}], "}"}]], "Print",
+ CellChangeTimes->{3.5835106817666593`*^9, 3.5835107222955303`*^9, 
+  3.583510948656129*^9, 3.583558147332471*^9, 3.583558433414974*^9, 
+  3.5835589620531025`*^9, 3.5835603990669355`*^9, 3.5835607866232166`*^9, 
+  3.5835609915875764`*^9, 3.583561688689602*^9, 3.5835783010920095`*^9, 
+  3.5835789356067247`*^9, 3.583579833541902*^9, 3.5835800659255104`*^9, 
+  3.5835809769267116`*^9, 3.583581153628222*^9, 3.5835830526179585`*^9, 
+  3.583593580198883*^9, 3.58359429567774*^9, 3.583643431773028*^9, 
+  3.583644348427038*^9, 3.583665373614471*^9, 3.5883275376869087`*^9, 
+  3.588394994134838*^9, 3.588395580009088*^9, 3.588482415512702*^9, 
+  3.5885668609733086`*^9, 3.588567072634974*^9, 3.5885689297932816`*^9, 
+  3.588697182484661*^9, 3.589992033675784*^9, 3.602576159527959*^9, 
+  3.602581511462764*^9, 3.628947394052497*^9, 3.628947666026353*^9, 
+  3.646902776138502*^9}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "lagr"}]], "Input",
+ CellChangeTimes->{{3.5835109604185495`*^9, 3.58351096629976*^9}}],
+
+Cell[BoxData[
+ StyleBox["\<\"Reads input, calculates results and writes output.\\nCreate \
+input file, then call lagr[], then read output.\\nFor the format of input \
+files look at a sample file.\"\>", "MSG"]], "Print", "PrintUsage",
+ CellChangeTimes->{3.628947504842191*^9},
+ CellTags->"Info3628951104-8644209"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"lagr", "[", "]"}]], "Input",
+ CellChangeTimes->{{3.583510976346178*^9, 3.583510979996584*^9}, {
+  3.588325946303382*^9, 3.5883259479753437`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Number of Bodies\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "3"}],
+  SequenceForm["Number of Bodies", " = ", 3],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9EXSnMcXmm/dgQAHzar2g==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Degrees of Freedom\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "3"}],
+  SequenceForm["Degrees of Freedom", " = ", 3],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9EXSnMcXmm/dgQAHzar2g==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Relative Movement\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "True"}],
+  SequenceForm["Relative Movement", " = ", True],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9EXSnMcXmm/dgQAHzar2g==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Rotation Matrix 1\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"1.`", ",", "0.`", ",", "0.`"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0.`", ",", "1.`", ",", "0.`"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0.`", ",", "0.`", ",", "1.`"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Rotation Matrix 1", " = ", {{1., 0., 0.}, {0., 1., 0.}, {0., 0., 1.}}],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9EXSnMcXmm/dgQAHzar2g==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Distance Vector 1\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+      RowBox[{"fu", "[", 
+       RowBox[{"q", "[", "0", "]"}], "]"}], "+", 
+      RowBox[{"1.`", " ", 
+       RowBox[{"(", 
+        RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+         RowBox[{"q", "[", "1", "]"}]}], ")"}]}]}], ",", "0.`", ",", "0.`"}], 
+    "}"}]}],
+  SequenceForm["Distance Vector 1", " = ", {0. + $CellContext`fu[
+      Mechanics`LAGR`q[0]] + 1. (0. + Mechanics`LAGR`q[1]), 0., 0.}],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9EXSnMcXmm/dgQAHzar2g==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Force Vector 1\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"0.`", ",", "0.`", ",", "0.`"}], "}"}]}],
+  SequenceForm["Force Vector 1", " = ", {0., 0., 0.}],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9EXSnMcXmm/dgQAHzar2g==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Moment Tensor 1\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"0.`", ",", "0.`", ",", "0.`"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0.`", ",", "0.`", ",", "0.`"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0.`", ",", "0.`", ",", "0.`"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Moment Tensor 1", " = ", {{0., 0., 0.}, {0., 0., 0.}, {0., 0., 0.}}],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9EXSnMcXmm/dgQAHzar2g==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Rotation Matrix 2\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+        RowBox[{"1.`", " ", 
+         RowBox[{"Cos", "[", 
+          RowBox[{"q", "[", "2", "]"}], "]"}]}]}], ",", 
+       RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+        RowBox[{"1.`", " ", 
+         RowBox[{"Sin", "[", 
+          RowBox[{"q", "[", "2", "]"}], "]"}]}]}], ",", "0.`"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"0.`", "\[VeryThinSpace]", "-", 
+        RowBox[{"1.`", " ", 
+         RowBox[{"Sin", "[", 
+          RowBox[{"q", "[", "2", "]"}], "]"}]}]}], ",", 
+       RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+        RowBox[{"1.`", " ", 
+         RowBox[{"Cos", "[", 
+          RowBox[{"q", "[", "2", "]"}], "]"}]}]}], ",", "0.`"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0.`", ",", "0.`", ",", "1.`"}], "}"}]}], "}"}]}],
+  SequenceForm["Rotation Matrix 2", " = ", {{0. + 1. Cos[
+        Mechanics`LAGR`q[2]], 0. + 1. Sin[
+        Mechanics`LAGR`q[2]], 0.}, {0. - 1. Sin[
+       Mechanics`LAGR`q[2]], 0. + 1. Cos[
+        Mechanics`LAGR`q[2]], 0.}, {0., 0., 1.}}],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9EXSnMcXmm/dgQAHzar2g==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Distance Vector 2\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+      RowBox[{"fu", "[", 
+       RowBox[{"q", "[", "0", "]"}], "]"}], "+", 
+      RowBox[{"1.`", " ", 
+       RowBox[{"(", 
+        RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+         RowBox[{"q", "[", "1", "]"}]}], ")"}]}], "-", 
+      RowBox[{"r", " ", 
+       RowBox[{"(", 
+        RowBox[{"0.`", "\[VeryThinSpace]", "-", 
+         RowBox[{"1.`", " ", 
+          RowBox[{"Sin", "[", 
+           RowBox[{"q", "[", "2", "]"}], "]"}]}]}], ")"}]}]}], ",", 
+     RowBox[{"0.`", "\[VeryThinSpace]", "-", 
+      RowBox[{"r", " ", 
+       RowBox[{"(", 
+        RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+         RowBox[{"1.`", " ", 
+          RowBox[{"Cos", "[", 
+           RowBox[{"q", "[", "2", "]"}], "]"}]}]}], ")"}]}]}], ",", "0.`"}], 
+    "}"}]}],
+  SequenceForm["Distance Vector 2", " = ", {0. + $CellContext`fu[
+      Mechanics`LAGR`q[0]] + 
+    1. (0. + Mechanics`LAGR`q[1]) - $CellContext`r (0. - 1. Sin[
+       Mechanics`LAGR`q[2]]), 0. - $CellContext`r (0. + 1. Cos[
+        Mechanics`LAGR`q[2]]), 0.}],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9EXSnMcXmm/dgQAHzar2g==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Force Vector 2\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"c", "[", 
+       RowBox[{"2", ",", "3"}], "]"}], " ", 
+      RowBox[{"(", 
+       RowBox[{"0.`", "\[VeryThinSpace]", "-", 
+        RowBox[{"1.`", " ", 
+         RowBox[{"Sin", "[", 
+          RowBox[{"q", "[", "2", "]"}], "]"}]}]}], ")"}], " ", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"lambda", "[", 
+         RowBox[{"2", ",", "3"}], "]"}], "+", 
+        RowBox[{"q", "[", "3", "]"}], "-", 
+        RowBox[{"xs", "[", 
+         RowBox[{"2", ",", "3", ",", "2"}], "]"}]}], ")"}]}], ",", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"-", "g"}], " ", 
+       RowBox[{"m", "[", "2", "]"}]}], "+", 
+      RowBox[{
+       RowBox[{"c", "[", 
+        RowBox[{"2", ",", "3"}], "]"}], " ", 
+       RowBox[{"(", 
+        RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+         RowBox[{"1.`", " ", 
+          RowBox[{"Cos", "[", 
+           RowBox[{"q", "[", "2", "]"}], "]"}]}]}], ")"}], " ", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"lambda", "[", 
+          RowBox[{"2", ",", "3"}], "]"}], "+", 
+         RowBox[{"q", "[", "3", "]"}], "-", 
+         RowBox[{"xs", "[", 
+          RowBox[{"2", ",", "3", ",", "2"}], "]"}]}], ")"}]}]}], ",", "0.`"}],
+     "}"}]}],
+  SequenceForm["Force Vector 2", " = ", {Mechanics`LAGR`c[2, 3] (0. - 1. Sin[
+       Mechanics`LAGR`q[2]]) (Mechanics`LAGR`lambda[2, 3] + 
+     Mechanics`LAGR`q[3] - Mechanics`LAGR`xs[2, 3, 2]), -$CellContext`g 
+     Mechanics`LAGR`m[2] + Mechanics`LAGR`c[2, 3] (0. + 1. Cos[
+         Mechanics`LAGR`q[2]]) (Mechanics`LAGR`lambda[2, 3] + 
+      Mechanics`LAGR`q[3] - Mechanics`LAGR`xs[2, 3, 2]), 0.}],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9GXvuY4vNJ+7QgAIsasXA==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Moment Tensor 2\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"0.`", ",", "0.`", ",", "0.`"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0.`", ",", "0.`", ",", "0.`"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0.`", ",", "0.`", ",", "0.`"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Moment Tensor 2", " = ", {{0., 0., 0.}, {0., 0., 0.}, {0., 0., 0.}}],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9GXvuY4vNJ+7QgAIsasXA==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Rotation Matrix 3\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+        RowBox[{"1.`", " ", 
+         RowBox[{"(", 
+          RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+           RowBox[{"1.`", " ", 
+            RowBox[{"Cos", "[", 
+             RowBox[{"q", "[", "2", "]"}], "]"}]}]}], ")"}]}]}], ",", 
+       RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+        RowBox[{"1.`", " ", 
+         RowBox[{"(", 
+          RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+           RowBox[{"1.`", " ", 
+            RowBox[{"Sin", "[", 
+             RowBox[{"q", "[", "2", "]"}], "]"}]}]}], ")"}]}]}], ",", "0.`"}],
+       "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+        RowBox[{"1.`", " ", 
+         RowBox[{"(", 
+          RowBox[{"0.`", "\[VeryThinSpace]", "-", 
+           RowBox[{"1.`", " ", 
+            RowBox[{"Sin", "[", 
+             RowBox[{"q", "[", "2", "]"}], "]"}]}]}], ")"}]}]}], ",", 
+       RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+        RowBox[{"1.`", " ", 
+         RowBox[{"(", 
+          RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+           RowBox[{"1.`", " ", 
+            RowBox[{"Cos", "[", 
+             RowBox[{"q", "[", "2", "]"}], "]"}]}]}], ")"}]}]}], ",", "0.`"}],
+       "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0.`", ",", "0.`", ",", "1.`"}], "}"}]}], "}"}]}],
+  SequenceForm["Rotation Matrix 3", " = ", {{0. + 1. (0. + 1. Cos[
+          Mechanics`LAGR`q[2]]), 0. + 1. (0. + 1. Sin[
+          Mechanics`LAGR`q[2]]), 0.}, {0. + 1. (0. - 1. Sin[
+         Mechanics`LAGR`q[2]]), 0. + 1. (0. + 1. Cos[
+          Mechanics`LAGR`q[2]]), 0.}, {0., 0., 1.}}],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9GXvuY4vNJ+7QgAIsasXA==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Distance Vector 3\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+      RowBox[{"fu", "[", 
+       RowBox[{"q", "[", "0", "]"}], "]"}], "+", 
+      RowBox[{"1.`", " ", 
+       RowBox[{"(", 
+        RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+         RowBox[{"q", "[", "1", "]"}]}], ")"}]}], "-", 
+      RowBox[{"r", " ", 
+       RowBox[{"(", 
+        RowBox[{"0.`", "\[VeryThinSpace]", "-", 
+         RowBox[{"1.`", " ", 
+          RowBox[{"Sin", "[", 
+           RowBox[{"q", "[", "2", "]"}], "]"}]}]}], ")"}]}], "+", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+         RowBox[{"q", "[", "3", "]"}]}], ")"}], " ", 
+       RowBox[{"(", 
+        RowBox[{"0.`", "\[VeryThinSpace]", "-", 
+         RowBox[{"1.`", " ", 
+          RowBox[{"Sin", "[", 
+           RowBox[{"q", "[", "2", "]"}], "]"}]}]}], ")"}]}]}], ",", 
+     RowBox[{"0.`", "\[VeryThinSpace]", "-", 
+      RowBox[{"r", " ", 
+       RowBox[{"(", 
+        RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+         RowBox[{"1.`", " ", 
+          RowBox[{"Cos", "[", 
+           RowBox[{"q", "[", "2", "]"}], "]"}]}]}], ")"}]}], "+", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+         RowBox[{"1.`", " ", 
+          RowBox[{"Cos", "[", 
+           RowBox[{"q", "[", "2", "]"}], "]"}]}]}], ")"}], " ", 
+       RowBox[{"(", 
+        RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+         RowBox[{"q", "[", "3", "]"}]}], ")"}]}]}], ",", "0.`"}], "}"}]}],
+  SequenceForm["Distance Vector 3", " = ", {0. + $CellContext`fu[
+      Mechanics`LAGR`q[0]] + 
+    1. (0. + Mechanics`LAGR`q[1]) - $CellContext`r (0. - 1. Sin[
+       Mechanics`LAGR`q[2]]) + (0. + Mechanics`LAGR`q[3]) (0. - 1. Sin[
+        Mechanics`LAGR`q[2]]), 0. - $CellContext`r (0. + 1. Cos[
+        Mechanics`LAGR`q[2]]) + (0. + 1. Cos[
+         Mechanics`LAGR`q[2]]) (0. + Mechanics`LAGR`q[3]), 0.}],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9GXvuY4vNJ+7QgAIsasXA==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Force Vector 3\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"-", "1.`"}], " ", 
+      RowBox[{"c", "[", 
+       RowBox[{"2", ",", "3"}], "]"}], " ", 
+      RowBox[{"(", 
+       RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+        RowBox[{"1.`", " ", 
+         RowBox[{"(", 
+          RowBox[{"0.`", "\[VeryThinSpace]", "-", 
+           RowBox[{"1.`", " ", 
+            RowBox[{"Sin", "[", 
+             RowBox[{"q", "[", "2", "]"}], "]"}]}]}], ")"}]}]}], ")"}], " ", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"lambda", "[", 
+         RowBox[{"2", ",", "3"}], "]"}], "+", 
+        RowBox[{"q", "[", "3", "]"}], "-", 
+        RowBox[{"xs", "[", 
+         RowBox[{"2", ",", "3", ",", "2"}], "]"}]}], ")"}]}], ",", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"-", "g"}], " ", 
+       RowBox[{"m", "[", "3", "]"}]}], "-", 
+      RowBox[{"1.`", " ", 
+       RowBox[{"c", "[", 
+        RowBox[{"2", ",", "3"}], "]"}], " ", 
+       RowBox[{"(", 
+        RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+         RowBox[{"1.`", " ", 
+          RowBox[{"(", 
+           RowBox[{"0.`", "\[VeryThinSpace]", "+", 
+            RowBox[{"1.`", " ", 
+             RowBox[{"Cos", "[", 
+              RowBox[{"q", "[", "2", "]"}], "]"}]}]}], ")"}]}]}], ")"}], " ", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"lambda", "[", 
+          RowBox[{"2", ",", "3"}], "]"}], "+", 
+         RowBox[{"q", "[", "3", "]"}], "-", 
+         RowBox[{"xs", "[", 
+          RowBox[{"2", ",", "3", ",", "2"}], "]"}]}], ")"}]}]}], ",", "0.`"}],
+     "}"}]}],
+  SequenceForm[
+  "Force Vector 3", " = ", {-Mechanics`LAGR`c[2, 3] (0. + 1. (0. - 1. Sin[
+         Mechanics`LAGR`q[2]])) (Mechanics`LAGR`lambda[2, 3] + 
+     Mechanics`LAGR`q[3] - Mechanics`LAGR`xs[2, 3, 2]), -$CellContext`g 
+     Mechanics`LAGR`m[3] - 1. Mechanics`LAGR`c[2, 3] (0. + 1. (0. + 1. Cos[
+          Mechanics`LAGR`q[2]])) (Mechanics`LAGR`lambda[2, 3] + 
+     Mechanics`LAGR`q[3] - Mechanics`LAGR`xs[2, 3, 2]), 0.}],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9GXvuY4vNJ+7QgAIsasXA==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Moment Tensor 3\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"0.`", ",", "0.`", ",", "0.`"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0.`", ",", "0.`", ",", "0.`"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0.`", ",", "0.`", ",", "0.`"}], "}"}]}], "}"}]}],
+  SequenceForm[
+  "Moment Tensor 3", " = ", {{0., 0., 0.}, {0., 0., 0.}, {0., 0., 0.}}],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9GXvuY4vNJ+7QgAIsasXA==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Number of Springs\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "1"}],
+  SequenceForm["Number of Springs", " = ", 1],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9GXvuY4vNJ+7QgAIsasXA==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Springs' data\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"{", 
+     RowBox[{"0", ",", "1", ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"xs", "[", 
+          RowBox[{"0", ",", "1", ",", "1"}], "]"}], "\[Rule]", "0"}], ",", 
+        RowBox[{
+         RowBox[{"xs", "[", 
+          RowBox[{"0", ",", "1", ",", "2"}], "]"}], "\[Rule]", "0"}], ",", 
+        RowBox[{
+         RowBox[{"xs", "[", 
+          RowBox[{"0", ",", "1", ",", "3"}], "]"}], "\[Rule]", "0"}], ",", 
+        RowBox[{
+         RowBox[{"xs", "[", 
+          RowBox[{"1", ",", "0", ",", "2"}], "]"}], "\[Rule]", "0"}], ",", 
+        RowBox[{
+         RowBox[{"xs", "[", 
+          RowBox[{"1", ",", "0", ",", "3"}], "]"}], "\[Rule]", "0"}]}], "}"}],
+       ",", 
+      RowBox[{"{", 
+       RowBox[{"Assumptions", "\[Rule]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"-", "1.`"}], " ", 
+           RowBox[{"q", "[", "1", "]"}]}], "-", 
+          RowBox[{"1.`", " ", 
+           RowBox[{"xs", "[", 
+            RowBox[{"1", ",", "0", ",", "1"}], "]"}]}]}], ">", "0"}]}], 
+       "}"}]}], "}"}], "}"}]}],
+  SequenceForm[
+  "Springs' data", 
+   " = ", {{0, 1, {
+     Mechanics`LAGR`xs[0, 1, 1] -> 0, Mechanics`LAGR`xs[0, 1, 2] -> 0, 
+      Mechanics`LAGR`xs[0, 1, 3] -> 0, Mechanics`LAGR`xs[1, 0, 2] -> 0, 
+      Mechanics`LAGR`xs[1, 0, 3] -> 0}, {
+     Assumptions -> -Mechanics`LAGR`q[1] - 1. Mechanics`LAGR`xs[1, 0, 1] > 
+       0}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9GXvuY4vNJ+7QgAIsasXA==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Number of Dampers\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "1"}],
+  SequenceForm["Number of Dampers", " = ", 1],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9GXvuY4vNJ+7QgAIsasXA==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Dampers' data\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{"{", 
+     RowBox[{"2", ",", "3", ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"xd", "[", 
+          RowBox[{"3", ",", "2", ",", "1"}], "]"}], "\[Rule]", "0"}], ",", 
+        RowBox[{
+         RowBox[{"xd", "[", 
+          RowBox[{"3", ",", "2", ",", "2"}], "]"}], "\[Rule]", "0"}], ",", 
+        RowBox[{
+         RowBox[{"xd", "[", 
+          RowBox[{"3", ",", "2", ",", "3"}], "]"}], "\[Rule]", "0"}], ",", 
+        RowBox[{
+         RowBox[{"xd", "[", 
+          RowBox[{"2", ",", "3", ",", "1"}], "]"}], "\[Rule]", "0"}], ",", 
+        RowBox[{
+         RowBox[{"xd", "[", 
+          RowBox[{"2", ",", "3", ",", "2"}], "]"}], "\[Rule]", "0"}], ",", 
+        RowBox[{
+         RowBox[{"xd", "[", 
+          RowBox[{"2", ",", "3", ",", "3"}], "]"}], "\[Rule]", "0"}]}], 
+       "}"}]}], "}"}], "}"}]}],
+  SequenceForm[
+  "Dampers' data", 
+   " = ", {{2, 3, {
+     Mechanics`LAGR`xd[3, 2, 1] -> 0, Mechanics`LAGR`xd[3, 2, 2] -> 0, 
+      Mechanics`LAGR`xd[3, 2, 3] -> 0, Mechanics`LAGR`xd[2, 3, 1] -> 0, 
+      Mechanics`LAGR`xd[2, 3, 2] -> 0, Mechanics`LAGR`xd[2, 3, 3] -> 0}}}],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9FXSnMdXmm/dgQAH1yr3w==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Number of Special Cases\"\>", 
+   "\[InvisibleSpace]", "\<\" = \"\>", "\[InvisibleSpace]", "1"}],
+  SequenceForm["Number of Special Cases", " = ", 1],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9FXSnMdXmm/dgQAH1yr3w==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"System Cases\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"m", "[", "1", "]"}], "\[Rule]", "0"}], ",", 
+       RowBox[{
+        RowBox[{"\[Theta]", "[", 
+         RowBox[{"3", ",", "1", ",", "1"}], "]"}], "\[Rule]", "0"}], ",", 
+       RowBox[{
+        RowBox[{"\[Theta]", "[", 
+         RowBox[{"3", ",", "1", ",", "2"}], "]"}], "\[Rule]", "0"}], ",", 
+       RowBox[{
+        RowBox[{"\[Theta]", "[", 
+         RowBox[{"3", ",", "1", ",", "3"}], "]"}], "\[Rule]", "0"}], ",", 
+       RowBox[{
+        RowBox[{"\[Theta]", "[", 
+         RowBox[{"3", ",", "2", ",", "2"}], "]"}], "\[Rule]", "0"}], ",", 
+       RowBox[{
+        RowBox[{"\[Theta]", "[", 
+         RowBox[{"3", ",", "2", ",", "3"}], "]"}], "\[Rule]", "0"}], ",", 
+       RowBox[{
+        RowBox[{"\[Theta]", "[", 
+         RowBox[{"3", ",", "3", ",", "3"}], "]"}], "\[Rule]", "0"}]}], 
+      "}"}]}], "}"}]}],
+  SequenceForm[
+  "System Cases", 
+   " = ", {{}, {
+    Mechanics`LAGR`m[1] -> 0, Mechanics`LAGR`\[Theta][3, 1, 1] -> 0, 
+     Mechanics`LAGR`\[Theta][3, 1, 2] -> 0, Mechanics`LAGR`\[Theta][3, 1, 3] -> 
+     0, Mechanics`LAGR`\[Theta][3, 2, 2] -> 0, 
+     Mechanics`LAGR`\[Theta][3, 2, 3] -> 0, Mechanics`LAGR`\[Theta][3, 3, 3] -> 
+     0}}],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9FXSnMdXmm/dgQAH1yr3w==
+  "]],
+
+Cell[BoxData["\<\"\\nResults of Calculation\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9FXSnMdXmm/dgQAH1yr3w==
+  "]],
+
+Cell[BoxData["\<\"\\nCommon Case\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9FXSnMdXmm/dgQAH1yr3w==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"g11\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{"1.`", " ", 
+     RowBox[{"m", "[", "1", "]"}]}], "+", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"m", "[", "2", "]"}]}], "+", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"m", "[", "3", "]"}]}]}]}],
+  SequenceForm[
+  "g11", " = ", 1. Mechanics`LAGR`m[1] + 1. Mechanics`LAGR`m[2] + 
+   1. Mechanics`LAGR`m[3]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HXvuY6vNJ+7QgAIuysYQ==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"g21\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{"1.`", " ", "r", " ", 
+     RowBox[{"Cos", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}], " ", 
+     RowBox[{"m", "[", "2", "]"}]}], "+", 
+    RowBox[{"1.`", " ", "r", " ", 
+     RowBox[{"Cos", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}], " ", 
+     RowBox[{"m", "[", "3", "]"}]}], "-", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"Cos", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}], " ", 
+     RowBox[{"m", "[", "3", "]"}], " ", 
+     RowBox[{"q", "[", "3", "]"}]}]}]}],
+  SequenceForm["g21", " = ", 1. $CellContext`r Cos[
+      Mechanics`LAGR`q[2]] Mechanics`LAGR`m[2] + 1. $CellContext`r Cos[
+      Mechanics`LAGR`q[2]] Mechanics`LAGR`m[3] - 1. Cos[
+     Mechanics`LAGR`q[2]] Mechanics`LAGR`m[3] Mechanics`LAGR`q[3]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9G3SvMcXmm/dgQAH5Kr5g==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"g22\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{"1.`", " ", 
+     SuperscriptBox["r", "2"], " ", 
+     RowBox[{"m", "[", "2", "]"}]}], "+", 
+    RowBox[{"1.`", " ", 
+     SuperscriptBox["r", "2"], " ", 
+     RowBox[{"m", "[", "3", "]"}]}], "-", 
+    RowBox[{"2.`", " ", "r", " ", 
+     RowBox[{"m", "[", "3", "]"}], " ", 
+     RowBox[{"q", "[", "3", "]"}]}], "+", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"m", "[", "3", "]"}], " ", 
+     SuperscriptBox[
+      RowBox[{"q", "[", "3", "]"}], "2"]}], "+", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"\[Theta]", "[", 
+      RowBox[{"2", ",", "1", ",", "1"}], "]"}]}], "+", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"\[Theta]", "[", 
+      RowBox[{"2", ",", "2", ",", "2"}], "]"}]}], "+", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"\[Theta]", "[", 
+      RowBox[{"3", ",", "1", ",", "1"}], "]"}]}], "+", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"\[Theta]", "[", 
+      RowBox[{"3", ",", "2", ",", "2"}], "]"}]}]}]}],
+  SequenceForm[
+  "g22", " = ", 1. $CellContext`r^2 Mechanics`LAGR`m[2] + 
+   1. $CellContext`r^2 Mechanics`LAGR`m[3] - 2. $CellContext`r 
+   Mechanics`LAGR`m[3] Mechanics`LAGR`q[3] + 
+   1. Mechanics`LAGR`m[3] Mechanics`LAGR`q[3]^2 + 
+   1. Mechanics`LAGR`\[Theta][2, 1, 1] + 1. Mechanics`LAGR`\[Theta][2, 2, 2] + 
+   1. Mechanics`LAGR`\[Theta][3, 1, 1] + 1. Mechanics`LAGR`\[Theta][3, 2, 2]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9H3SvMdXmm/dgQAH7ir6w==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"g31\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{"-", "1.`"}], " ", 
+    RowBox[{"m", "[", "3", "]"}], " ", 
+    RowBox[{"Sin", "[", 
+     RowBox[{"q", "[", "2", "]"}], "]"}]}]}],
+  SequenceForm["g31", " = ", -Mechanics`LAGR`m[3] Sin[
+     Mechanics`LAGR`q[2]]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9GPvuY7vNJ+7QgAI1isbw==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"g32\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["g32", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9GPvuY7vNJ+7QgAI1isbw==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9GPvuY7vNJ+7QgAI1isbw==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"g33\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"1.`", " ", 
+    RowBox[{"m", "[", "3", "]"}]}]}],
+  SequenceForm["g33", " = ", 1. Mechanics`LAGR`m[3]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9GPvuY7vNJ+7QgAI1isbw==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam100\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{"1.`", " ", 
+     RowBox[{"m", "[", "1", "]"}], " ", 
+     RowBox[{
+      SuperscriptBox["fu", "\[Prime]\[Prime]",
+       MultilineFunction->None], "[", 
+      RowBox[{"q", "[", "0", "]"}], "]"}]}], "+", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"m", "[", "2", "]"}], " ", 
+     RowBox[{
+      SuperscriptBox["fu", "\[Prime]\[Prime]",
+       MultilineFunction->None], "[", 
+      RowBox[{"q", "[", "0", "]"}], "]"}]}], "+", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"m", "[", "3", "]"}], " ", 
+     RowBox[{
+      SuperscriptBox["fu", "\[Prime]\[Prime]",
+       MultilineFunction->None], "[", 
+      RowBox[{"q", "[", "0", "]"}], "]"}]}]}]}],
+  SequenceForm[
+  "Gam100", " = ", 1. Mechanics`LAGR`m[1] Derivative[2][$CellContext`fu][
+      Mechanics`LAGR`q[0]] + 
+   1. Mechanics`LAGR`m[2] Derivative[2][$CellContext`fu][
+      Mechanics`LAGR`q[0]] + 
+   1. Mechanics`LAGR`m[3] Derivative[2][$CellContext`fu][
+      Mechanics`LAGR`q[0]]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9FPSgscXmm/dgQAH+6r8g==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam110\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam110", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9FPSgscXmm/dgQAH+6r8g==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9FPSgscXmm/dgQAH+6r8g==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam111\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam111", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9FPSgscXmm/dgQAH+6r8g==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9FPSgscXmm/dgQAH+6r8g==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam120\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam120", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HPvhY4vNJ+7QgAI36sdA==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HPvhY4vNJ+7QgAI36sdA==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam121\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam121", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HPvhY4vNJ+7QgAI36sdA==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HPvhY4vNJ+7QgAI36sdA==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam122\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"-", "1.`"}], " ", "r", " ", 
+     RowBox[{"m", "[", "2", "]"}], " ", 
+     RowBox[{"Sin", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}]}], "-", 
+    RowBox[{"1.`", " ", "r", " ", 
+     RowBox[{"m", "[", "3", "]"}], " ", 
+     RowBox[{"Sin", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}]}], "+", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"m", "[", "3", "]"}], " ", 
+     RowBox[{"q", "[", "3", "]"}], " ", 
+     RowBox[{"Sin", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}]}]}]}],
+  SequenceForm["Gam122", " = ", -$CellContext`r Mechanics`LAGR`m[2] Sin[
+      Mechanics`LAGR`q[2]] - 1. $CellContext`r Mechanics`LAGR`m[3] Sin[
+     Mechanics`LAGR`q[2]] + 1. Mechanics`LAGR`m[3] Mechanics`LAGR`q[3] Sin[
+      Mechanics`LAGR`q[2]]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9GvSgsdXmm/dgQAICSr+Q==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam130\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam130", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9FvvhY6vNJ+7QgAI7Ssew==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9FvvhY6vNJ+7QgAI7Ssew==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam131\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam131", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9FvvhY6vNJ+7QgAI7Ssew==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9FvvhY6vNJ+7QgAI7Ssew==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam132\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{"-", "1.`"}], " ", 
+    RowBox[{"Cos", "[", 
+     RowBox[{"q", "[", "2", "]"}], "]"}], " ", 
+    RowBox[{"m", "[", "3", "]"}]}]}],
+  SequenceForm["Gam132", " = ", -Cos[
+     Mechanics`LAGR`q[2]] Mechanics`LAGR`m[3]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9FvvhY6vNJ+7QgAI7Ssew==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam133\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam133", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9FvvhY6vNJ+7QgAI7Ssew==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9FvvhY6vNJ+7QgAI7Ssew==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam200\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{"1.`", " ", "r", " ", 
+     RowBox[{"Cos", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}], " ", 
+     RowBox[{"m", "[", "2", "]"}], " ", 
+     RowBox[{
+      SuperscriptBox["fu", "\[Prime]\[Prime]",
+       MultilineFunction->None], "[", 
+      RowBox[{"q", "[", "0", "]"}], "]"}]}], "+", 
+    RowBox[{"1.`", " ", "r", " ", 
+     RowBox[{"Cos", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}], " ", 
+     RowBox[{"m", "[", "3", "]"}], " ", 
+     RowBox[{
+      SuperscriptBox["fu", "\[Prime]\[Prime]",
+       MultilineFunction->None], "[", 
+      RowBox[{"q", "[", "0", "]"}], "]"}]}], "-", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"Cos", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}], " ", 
+     RowBox[{"m", "[", "3", "]"}], " ", 
+     RowBox[{"q", "[", "3", "]"}], " ", 
+     RowBox[{
+      SuperscriptBox["fu", "\[Prime]\[Prime]",
+       MultilineFunction->None], "[", 
+      RowBox[{"q", "[", "0", "]"}], "]"}]}]}]}],
+  SequenceForm["Gam200", " = ", 1. $CellContext`r Cos[
+      Mechanics`LAGR`q[2]] Mechanics`LAGR`m[2] Derivative[2][$CellContext`fu][
+      Mechanics`LAGR`q[0]] + 1. $CellContext`r Cos[
+      Mechanics`LAGR`q[2]] Mechanics`LAGR`m[3] Derivative[2][$CellContext`fu][
+      Mechanics`LAGR`q[0]] - 1. Cos[
+     Mechanics`LAGR`q[2]] Mechanics`LAGR`m[3] Mechanics`LAGR`q[3] 
+   Derivative[2][$CellContext`fu][
+     Mechanics`LAGR`q[0]]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9FvvhY6vNJ+7QgAI7Ssew==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam210\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam210", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9FvvhY6vNJ+7QgAI7Ssew==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HvSoscXmm/dgQAIEqr/g==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam211\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam211", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HvSoscXmm/dgQAIEqr/g==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HvSoscXmm/dgQAIEqr/g==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam220\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam220", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HvSoscXmm/dgQAIEqr/g==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HvSoscXmm/dgQAIEqr/g==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam221\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam221", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HvSoscXmm/dgQAIEqr/g==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HvSoscXmm/dgQAIEqr/g==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam222\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam222", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HvSoscXmm/dgQAIEqr/g==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HvSoscXmm/dgQAIEqr/g==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam230\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam230", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HvSoscXmm/dgQAIEqr/g==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HvSoscXmm/dgQAIEqr/g==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam231\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam231", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HvSoscXmm/dgQAIEqr/g==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HvSoscXmm/dgQAIEqr/g==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam232\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"-", "1.`"}], " ", "r", " ", 
+     RowBox[{"m", "[", "3", "]"}]}], "+", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"m", "[", "3", "]"}], " ", 
+     RowBox[{"q", "[", "3", "]"}]}]}]}],
+  SequenceForm[
+  "Gam232", " = ", -$CellContext`r Mechanics`LAGR`m[3] + 
+   1. Mechanics`LAGR`m[3] Mechanics`LAGR`q[3]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HvSoscXmm/dgQAIEqr/g==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam233\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam233", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HvSoscXmm/dgQAIEqr/g==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HvSoscXmm/dgQAIEqr/g==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam300\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{"-", "1.`"}], " ", 
+    RowBox[{"m", "[", "3", "]"}], " ", 
+    RowBox[{"Sin", "[", 
+     RowBox[{"q", "[", "2", "]"}], "]"}], " ", 
+    RowBox[{
+     SuperscriptBox["fu", "\[Prime]\[Prime]",
+      MultilineFunction->None], "[", 
+     RowBox[{"q", "[", "0", "]"}], "]"}]}]}],
+  SequenceForm["Gam300", " = ", -Mechanics`LAGR`m[3] Sin[
+     Mechanics`LAGR`q[2]] Derivative[2][$CellContext`fu][
+     Mechanics`LAGR`q[0]]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HvSoscXmm/dgQAIEqr/g==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam310\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam310", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HvSoscXmm/dgQAIEqr/g==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HvSoscXmm/dgQAIEqr/g==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam311\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam311", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HvSoscXmm/dgQAIEqr/g==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9EfvhY5vNJ+7QgAI9qsgA==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam320\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam320", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9EfvhY5vNJ+7QgAI9qsgA==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9EfvhY5vNJ+7QgAI9qsgA==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam321\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam321", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9EfvhY5vNJ+7QgAI9qsgA==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9EfvhY5vNJ+7QgAI9qsgA==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam322\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{"1.`", " ", "r", " ", 
+     RowBox[{"m", "[", "3", "]"}]}], "-", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"m", "[", "3", "]"}], " ", 
+     RowBox[{"q", "[", "3", "]"}]}]}]}],
+  SequenceForm[
+  "Gam322", " = ", 1. $CellContext`r Mechanics`LAGR`m[3] - 1. 
+   Mechanics`LAGR`m[3] Mechanics`LAGR`q[3]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9EfvhY5vNJ+7QgAI9qsgA==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam330\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam330", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9EfvhY5vNJ+7QgAI9qsgA==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9EfvhY5vNJ+7QgAI9qsgA==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam331\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam331", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9EfvhY5vNJ+7QgAI9qsgA==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9EfvhY5vNJ+7QgAI9qsgA==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam332\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam332", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9EfvhY5vNJ+7QgAI9qsgA==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9EfvhY5vNJ+7QgAI9qsgA==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam333\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam333", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9EfvhY5vNJ+7QgAI9qsgA==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9EfvhY5vNJ+7QgAI9qsgA==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Q1\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"-", "1.`"}], " ", 
+     RowBox[{"c", "[", 
+      RowBox[{"0", ",", "1"}], "]"}], " ", 
+     RowBox[{"lambda", "[", 
+      RowBox[{"0", ",", "1"}], "]"}]}], "-", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"c", "[", 
+      RowBox[{"0", ",", "1"}], "]"}], " ", 
+     RowBox[{"q", "[", "1", "]"}]}], "-", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"c", "[", 
+      RowBox[{"0", ",", "1"}], "]"}], " ", 
+     RowBox[{"xs", "[", 
+      RowBox[{"1", ",", "0", ",", "1"}], "]"}]}]}]}],
+  SequenceForm[
+  "Q1", " = ", -Mechanics`LAGR`c[0, 1] Mechanics`LAGR`lambda[0, 1] - 1. 
+   Mechanics`LAGR`c[0, 1] Mechanics`LAGR`q[1] - 1. Mechanics`LAGR`c[0, 1] 
+   Mechanics`LAGR`xs[1, 0, 1]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HfvhY7vNJ+7QgAJBCshw==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Q2\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"-", "1.`"}], " ", 
+     RowBox[{"k", "[", 
+      RowBox[{"2", ",", "3"}], "]"}], " ", 
+     SuperscriptBox[
+      RowBox[{"q", "[", "3", "]"}], "2"], " ", 
+     RowBox[{"qd", "[", "2", "]"}]}], "-", 
+    RowBox[{"1.`", " ", "g", " ", "r", " ", 
+     RowBox[{"m", "[", "2", "]"}], " ", 
+     RowBox[{"Sin", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}]}], "-", 
+    RowBox[{"1.`", " ", "g", " ", "r", " ", 
+     RowBox[{"m", "[", "3", "]"}], " ", 
+     RowBox[{"Sin", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}]}], "+", 
+    RowBox[{"1.`", " ", "g", " ", 
+     RowBox[{"m", "[", "3", "]"}], " ", 
+     RowBox[{"q", "[", "3", "]"}], " ", 
+     RowBox[{"Sin", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}]}]}]}],
+  SequenceForm[
+  "Q2", " = ", -Mechanics`LAGR`k[2, 3] Mechanics`LAGR`q[3]^2 
+    Mechanics`LAGR`qd[2] - 1. $CellContext`g $CellContext`r 
+   Mechanics`LAGR`m[2] Sin[
+     Mechanics`LAGR`q[2]] - 1. $CellContext`g $CellContext`r 
+   Mechanics`LAGR`m[3] Sin[
+     Mechanics`LAGR`q[2]] + 
+   1. $CellContext`g Mechanics`LAGR`m[3] Mechanics`LAGR`q[3] Sin[
+      Mechanics`LAGR`q[2]]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9G/v5Y4vNJ+7QgAJD6sjQ==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Q3\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"-", "1.`"}], " ", 
+     RowBox[{"c", "[", 
+      RowBox[{"2", ",", "3"}], "]"}], " ", 
+     RowBox[{"lambda", "[", 
+      RowBox[{"2", ",", "3"}], "]"}]}], "-", 
+    RowBox[{"1.`", " ", "g", " ", 
+     RowBox[{"Cos", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}], " ", 
+     RowBox[{"m", "[", "3", "]"}]}], "-", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"c", "[", 
+      RowBox[{"2", ",", "3"}], "]"}], " ", 
+     RowBox[{"q", "[", "3", "]"}]}], "-", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"k", "[", 
+      RowBox[{"2", ",", "3"}], "]"}], " ", 
+     RowBox[{"qd", "[", "3", "]"}]}], "+", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"c", "[", 
+      RowBox[{"2", ",", "3"}], "]"}], " ", 
+     RowBox[{"xs", "[", 
+      RowBox[{"2", ",", "3", ",", "2"}], "]"}]}]}]}],
+  SequenceForm[
+  "Q3", " = ", -Mechanics`LAGR`c[2, 3] Mechanics`LAGR`lambda[2, 3] - 
+   1. $CellContext`g Cos[
+     Mechanics`LAGR`q[2]] Mechanics`LAGR`m[3] - 1. Mechanics`LAGR`c[2, 3] 
+   Mechanics`LAGR`q[3] - 1. Mechanics`LAGR`k[2, 3] Mechanics`LAGR`qd[3] + 
+   1. Mechanics`LAGR`c[2, 3] Mechanics`LAGR`xs[2, 3, 2]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9FMZWUOr7RfOwIAGQmrFw==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Potential of Springs\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{"1.`", " ", 
+     RowBox[{"c", "[", 
+      RowBox[{"0", ",", "1"}], "]"}], " ", 
+     RowBox[{"lambda", "[", 
+      RowBox[{"0", ",", "1"}], "]"}], " ", 
+     RowBox[{"q", "[", "1", "]"}]}], "+", 
+    RowBox[{"0.5`", " ", 
+     RowBox[{"c", "[", 
+      RowBox[{"0", ",", "1"}], "]"}], " ", 
+     SuperscriptBox[
+      RowBox[{"q", "[", "1", "]"}], "2"]}], "+", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"c", "[", 
+      RowBox[{"0", ",", "1"}], "]"}], " ", 
+     RowBox[{"lambda", "[", 
+      RowBox[{"0", ",", "1"}], "]"}], " ", 
+     RowBox[{"xs", "[", 
+      RowBox[{"1", ",", "0", ",", "1"}], "]"}]}], "+", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"c", "[", 
+      RowBox[{"0", ",", "1"}], "]"}], " ", 
+     RowBox[{"q", "[", "1", "]"}], " ", 
+     RowBox[{"xs", "[", 
+      RowBox[{"1", ",", "0", ",", "1"}], "]"}]}], "+", 
+    RowBox[{"0.5`", " ", 
+     RowBox[{"c", "[", 
+      RowBox[{"0", ",", "1"}], "]"}], " ", 
+     SuperscriptBox[
+      RowBox[{"xs", "[", 
+       RowBox[{"1", ",", "0", ",", "1"}], "]"}], "2"]}]}]}],
+  SequenceForm[
+  "Potential of Springs", " = ", 
+   1. Mechanics`LAGR`c[0, 1] Mechanics`LAGR`lambda[0, 1] Mechanics`LAGR`q[1] + 
+   0.5 Mechanics`LAGR`c[0, 1] Mechanics`LAGR`q[1]^2 + 
+   1. Mechanics`LAGR`c[0, 1] Mechanics`LAGR`lambda[0, 1] 
+    Mechanics`LAGR`xs[1, 0, 1] + 
+   1. Mechanics`LAGR`c[0, 1] Mechanics`LAGR`q[1] Mechanics`LAGR`xs[1, 0, 1] + 
+   0.5 Mechanics`LAGR`c[0, 1] Mechanics`LAGR`xs[1, 0, 1]^2],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9Fs38ocXmm/dgQAHKmrmw==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Generalized Force of Dampers 1\"\>", 
+   "\[InvisibleSpace]", "\<\" = \"\>", "\[InvisibleSpace]", "0"}],
+  SequenceForm["Generalized Force of Dampers 1", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9Fs38ocXmm/dgQAHKmrmw==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Generalized Force of Dampers 2\"\>", 
+   "\[InvisibleSpace]", "\<\" = \"\>", "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{"-", "1.`"}], " ", 
+    RowBox[{"k", "[", 
+     RowBox[{"2", ",", "3"}], "]"}], " ", 
+    SuperscriptBox[
+     RowBox[{"q", "[", "3", "]"}], "2"], " ", 
+    RowBox[{"qd", "[", "2", "]"}]}]}],
+  SequenceForm[
+  "Generalized Force of Dampers 2", " = ", -Mechanics`LAGR`k[2, 3] 
+   Mechanics`LAGR`q[3]^2 Mechanics`LAGR`qd[2]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9Fs38ocXmm/dgQAHKmrmw==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Generalized Force of Dampers 3\"\>", 
+   "\[InvisibleSpace]", "\<\" = \"\>", "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{"-", "1.`"}], " ", 
+    RowBox[{"k", "[", 
+     RowBox[{"2", ",", "3"}], "]"}], " ", 
+    RowBox[{"qd", "[", "3", "]"}]}]}],
+  SequenceForm[
+  "Generalized Force of Dampers 3", " = ", -Mechanics`LAGR`k[2, 3] 
+   Mechanics`LAGR`qd[3]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9Fs38ocXmm/dgQAHKmrmw==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"\\nSpecial Case\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "1"}],
+  SequenceForm["\nSpecial Case", " = ", 1],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9Fs38ocXmm/dgQAHKmrmw==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   RowBox[{"\<\"g11\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+    "\[InvisibleSpace]", "0.`"}], "\[VeryThinSpace]", "+", 
+   RowBox[{"1.`", " ", 
+    RowBox[{"m", "[", "2", "]"}]}], "+", 
+   RowBox[{"1.`", " ", 
+    RowBox[{"m", "[", "3", "]"}]}]}],
+  SequenceForm[
+  "g11", " = ", 0. + 1. Mechanics`LAGR`m[2] + 1. Mechanics`LAGR`m[3]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HsZeUOr7RfOwIAGTerHQ==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"g21\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{"1.`", " ", "r", " ", 
+     RowBox[{"Cos", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}], " ", 
+     RowBox[{"m", "[", "2", "]"}]}], "+", 
+    RowBox[{"1.`", " ", "r", " ", 
+     RowBox[{"Cos", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}], " ", 
+     RowBox[{"m", "[", "3", "]"}]}], "-", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"Cos", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}], " ", 
+     RowBox[{"m", "[", "3", "]"}], " ", 
+     RowBox[{"q", "[", "3", "]"}]}]}]}],
+  SequenceForm["g21", " = ", 1. $CellContext`r Cos[
+      Mechanics`LAGR`q[2]] Mechanics`LAGR`m[2] + 1. $CellContext`r Cos[
+      Mechanics`LAGR`q[2]] Mechanics`LAGR`m[3] - 1. Cos[
+     Mechanics`LAGR`q[2]] Mechanics`LAGR`m[3] Mechanics`LAGR`q[3]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HsZeUOr7RfOwIAGTerHQ==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   RowBox[{"\<\"g22\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+    "\[InvisibleSpace]", "0.`"}], "\[VeryThinSpace]", "+", 
+   RowBox[{"1.`", " ", 
+    SuperscriptBox["r", "2"], " ", 
+    RowBox[{"m", "[", "2", "]"}]}], "+", 
+   RowBox[{"1.`", " ", 
+    SuperscriptBox["r", "2"], " ", 
+    RowBox[{"m", "[", "3", "]"}]}], "-", 
+   RowBox[{"2.`", " ", "r", " ", 
+    RowBox[{"m", "[", "3", "]"}], " ", 
+    RowBox[{"q", "[", "3", "]"}]}], "+", 
+   RowBox[{"1.`", " ", 
+    RowBox[{"m", "[", "3", "]"}], " ", 
+    SuperscriptBox[
+     RowBox[{"q", "[", "3", "]"}], "2"]}], "+", 
+   RowBox[{"1.`", " ", 
+    RowBox[{"\[Theta]", "[", 
+     RowBox[{"2", ",", "1", ",", "1"}], "]"}]}], "+", 
+   RowBox[{"1.`", " ", 
+    RowBox[{"\[Theta]", "[", 
+     RowBox[{"2", ",", "2", ",", "2"}], "]"}]}]}],
+  SequenceForm[
+  "g22", " = ", 0. + 1. $CellContext`r^2 Mechanics`LAGR`m[2] + 
+   1. $CellContext`r^2 Mechanics`LAGR`m[3] - 2. $CellContext`r 
+   Mechanics`LAGR`m[3] Mechanics`LAGR`q[3] + 
+   1. Mechanics`LAGR`m[3] Mechanics`LAGR`q[3]^2 + 
+   1. Mechanics`LAGR`\[Theta][2, 1, 1] + 1. Mechanics`LAGR`\[Theta][2, 2, 2]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HsZeUOr7RfOwIAGTerHQ==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"g31\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{"-", "1.`"}], " ", 
+    RowBox[{"m", "[", "3", "]"}], " ", 
+    RowBox[{"Sin", "[", 
+     RowBox[{"q", "[", "2", "]"}], "]"}]}]}],
+  SequenceForm["g31", " = ", -Mechanics`LAGR`m[3] Sin[
+     Mechanics`LAGR`q[2]]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HsZeUOr7RfOwIAGTerHQ==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"g32\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["g32", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HsZeUOr7RfOwIAGTerHQ==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HsZeUOr7RfOwIAGTerHQ==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"g33\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{"1.`", " ", 
+    RowBox[{"m", "[", "3", "]"}]}]}],
+  SequenceForm["g33", " = ", 1. Mechanics`LAGR`m[3]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HsZeUOr7RfOwIAGTerHQ==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   RowBox[{"\<\"Gam100\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+    "\[InvisibleSpace]", "0.`"}], "\[VeryThinSpace]", "+", 
+   RowBox[{"1.`", " ", 
+    RowBox[{"m", "[", "2", "]"}], " ", 
+    RowBox[{
+     SuperscriptBox["fu", "\[Prime]\[Prime]",
+      MultilineFunction->None], "[", 
+     RowBox[{"q", "[", "0", "]"}], "]"}]}], "+", 
+   RowBox[{"1.`", " ", 
+    RowBox[{"m", "[", "3", "]"}], " ", 
+    RowBox[{
+     SuperscriptBox["fu", "\[Prime]\[Prime]",
+      MultilineFunction->None], "[", 
+     RowBox[{"q", "[", "0", "]"}], "]"}]}]}],
+  SequenceForm[
+  "Gam100", " = ", 0. + 1. Mechanics`LAGR`m[2] Derivative[2][$CellContext`fu][
+      Mechanics`LAGR`q[0]] + 
+   1. Mechanics`LAGR`m[3] Derivative[2][$CellContext`fu][
+      Mechanics`LAGR`q[0]]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HsZeUOr7RfOwIAGTerHQ==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam110\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam110", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HsZeUOr7RfOwIAGTerHQ==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HsZeUOr7RfOwIAGTerHQ==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam111\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam111", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HsZeUOr7RfOwIAGTerHQ==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HsZeUOr7RfOwIAGTerHQ==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam120\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam120", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HsZeUOr7RfOwIAGTerHQ==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HsZeUOr7RfOwIAGTerHQ==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam121\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam121", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HsZeUOr7RfOwIAGTerHQ==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9HsZeUOr7RfOwIAGTerHQ==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam122\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"-", "1.`"}], " ", "r", " ", 
+     RowBox[{"m", "[", "2", "]"}], " ", 
+     RowBox[{"Sin", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}]}], "-", 
+    RowBox[{"1.`", " ", "r", " ", 
+     RowBox[{"m", "[", "3", "]"}], " ", 
+     RowBox[{"Sin", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}]}], "+", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"m", "[", "3", "]"}], " ", 
+     RowBox[{"q", "[", "3", "]"}], " ", 
+     RowBox[{"Sin", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}]}]}]}],
+  SequenceForm["Gam122", " = ", -$CellContext`r Mechanics`LAGR`m[2] Sin[
+      Mechanics`LAGR`q[2]] - 1. $CellContext`r Mechanics`LAGR`m[3] Sin[
+     Mechanics`LAGR`q[2]] + 1. Mechanics`LAGR`m[3] Mechanics`LAGR`q[3] Sin[
+      Mechanics`LAGR`q[2]]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9Pfyh1eab92BAAcz6ug
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam130\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam130", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9Pfyh1eab92BAAcz6ug
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9Pfyh1eab92BAAcz6ug
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam131\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam131", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9Pfyh1eab92BAAcz6ug
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9Pfyh1eab92BAAcz6ug
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam132\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{"-", "1.`"}], " ", 
+    RowBox[{"Cos", "[", 
+     RowBox[{"q", "[", "2", "]"}], "]"}], " ", 
+    RowBox[{"m", "[", "3", "]"}]}]}],
+  SequenceForm["Gam132", " = ", -Cos[
+     Mechanics`LAGR`q[2]] Mechanics`LAGR`m[3]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9Pfyh1eab92BAAcz6ug
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam133\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam133", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9Pfyh1eab92BAAcz6ug
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9Pfyh1eab92BAAcz6ug
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam200\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{"1.`", " ", "r", " ", 
+     RowBox[{"Cos", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}], " ", 
+     RowBox[{"m", "[", "2", "]"}], " ", 
+     RowBox[{
+      SuperscriptBox["fu", "\[Prime]\[Prime]",
+       MultilineFunction->None], "[", 
+      RowBox[{"q", "[", "0", "]"}], "]"}]}], "+", 
+    RowBox[{"1.`", " ", "r", " ", 
+     RowBox[{"Cos", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}], " ", 
+     RowBox[{"m", "[", "3", "]"}], " ", 
+     RowBox[{
+      SuperscriptBox["fu", "\[Prime]\[Prime]",
+       MultilineFunction->None], "[", 
+      RowBox[{"q", "[", "0", "]"}], "]"}]}], "-", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"Cos", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}], " ", 
+     RowBox[{"m", "[", "3", "]"}], " ", 
+     RowBox[{"q", "[", "3", "]"}], " ", 
+     RowBox[{
+      SuperscriptBox["fu", "\[Prime]\[Prime]",
+       MultilineFunction->None], "[", 
+      RowBox[{"q", "[", "0", "]"}], "]"}]}]}]}],
+  SequenceForm["Gam200", " = ", 1. $CellContext`r Cos[
+      Mechanics`LAGR`q[2]] Mechanics`LAGR`m[2] Derivative[2][$CellContext`fu][
+      Mechanics`LAGR`q[0]] + 1. $CellContext`r Cos[
+      Mechanics`LAGR`q[2]] Mechanics`LAGR`m[3] Derivative[2][$CellContext`fu][
+      Mechanics`LAGR`q[0]] - 1. Cos[
+     Mechanics`LAGR`q[2]] Mechanics`LAGR`m[3] Mechanics`LAGR`q[3] 
+   Derivative[2][$CellContext`fu][
+     Mechanics`LAGR`q[0]]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9Pfyh1eab92BAAcz6ug
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam210\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam210", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9Pfyh1eab92BAAcz6ug
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9Pfyh1eab92BAAcz6ug
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam211\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam211", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9Pfyh1eab92BAAcz6ug
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9Pfyh1eab92BAAcz6ug
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam220\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam220", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9Pfyh1eab92BAAcz6ug
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9Pfyh1eab92BAAcz6ug
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam221\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam221", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9Pfyh1eab92BAAcz6ug
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9Pfyh1eab92BAAcz6ug
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam222\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam222", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9Pfyh1eab92BAAcz6ug
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9Pfyh1eab92BAAcz6ug
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam230\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam230", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9E8ZRUOr7RfOwIAGWWrIw==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9E8ZRUOr7RfOwIAGWWrIw==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam231\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam231", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9E8ZRUOr7RfOwIAGWWrIw==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9E8ZRUOr7RfOwIAGWWrIw==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam232\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"-", "1.`"}], " ", "r", " ", 
+     RowBox[{"m", "[", "3", "]"}]}], "+", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"m", "[", "3", "]"}], " ", 
+     RowBox[{"q", "[", "3", "]"}]}]}]}],
+  SequenceForm[
+  "Gam232", " = ", -$CellContext`r Mechanics`LAGR`m[3] + 
+   1. Mechanics`LAGR`m[3] Mechanics`LAGR`q[3]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9E8ZRUOr7RfOwIAGWWrIw==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam233\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam233", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9E8ZRUOr7RfOwIAGWWrIw==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9E8ZRUOr7RfOwIAGWWrIw==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam300\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{"-", "1.`"}], " ", 
+    RowBox[{"m", "[", "3", "]"}], " ", 
+    RowBox[{"Sin", "[", 
+     RowBox[{"q", "[", "2", "]"}], "]"}], " ", 
+    RowBox[{
+     SuperscriptBox["fu", "\[Prime]\[Prime]",
+      MultilineFunction->None], "[", 
+     RowBox[{"q", "[", "0", "]"}], "]"}]}]}],
+  SequenceForm["Gam300", " = ", -Mechanics`LAGR`m[3] Sin[
+     Mechanics`LAGR`q[2]] Derivative[2][$CellContext`fu][
+     Mechanics`LAGR`q[0]]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9E8ZRUOr7RfOwIAGWWrIw==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam310\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam310", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9E8ZRUOr7RfOwIAGWWrIw==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9E8ZRUOr7RfOwIAGWWrIw==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam311\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam311", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9E8ZRUOr7RfOwIAGWWrIw==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9E8ZRUOr7RfOwIAGWWrIw==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam320\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam320", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9E8ZRUOr7RfOwIAGWWrIw==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9E8ZRUOr7RfOwIAGWWrIw==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam321\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam321", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9E8ZRUOr7RfOwIAGWWrIw==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9E8ZRUOr7RfOwIAGWWrIw==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam322\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{"1.`", " ", "r", " ", 
+     RowBox[{"m", "[", "3", "]"}]}], "-", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"m", "[", "3", "]"}], " ", 
+     RowBox[{"q", "[", "3", "]"}]}]}]}],
+  SequenceForm[
+  "Gam322", " = ", 1. $CellContext`r Mechanics`LAGR`m[3] - 1. 
+   Mechanics`LAGR`m[3] Mechanics`LAGR`q[3]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9E8ZRUOr7RfOwIAGWWrIw==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam330\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam330", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9E8ZRUOr7RfOwIAGWWrIw==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9E8ZRUOr7RfOwIAGWWrIw==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam331\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam331", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9E8ZRUOr7RfOwIAGWWrIw==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9F83yocXmm/dgQAHPWrpQ==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam332\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam332", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9F83yocXmm/dgQAHPWrpQ==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9F83yocXmm/dgQAHPWrpQ==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Gam333\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", "0"}],
+  SequenceForm["Gam333", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9F83yocXmm/dgQAHPWrpQ==
+  "]],
+
+Cell[BoxData["\<\"is 0\"\>"], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9F83yocXmm/dgQAHPWrpQ==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Q1\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"-", "1.`"}], " ", 
+     RowBox[{"c", "[", 
+      RowBox[{"0", ",", "1"}], "]"}], " ", 
+     RowBox[{"lambda", "[", 
+      RowBox[{"0", ",", "1"}], "]"}]}], "-", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"c", "[", 
+      RowBox[{"0", ",", "1"}], "]"}], " ", 
+     RowBox[{"q", "[", "1", "]"}]}], "-", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"c", "[", 
+      RowBox[{"0", ",", "1"}], "]"}], " ", 
+     RowBox[{"xs", "[", 
+      RowBox[{"1", ",", "0", ",", "1"}], "]"}]}]}]}],
+  SequenceForm[
+  "Q1", " = ", -Mechanics`LAGR`c[0, 1] Mechanics`LAGR`lambda[0, 1] - 1. 
+   Mechanics`LAGR`c[0, 1] Mechanics`LAGR`q[1] - 1. Mechanics`LAGR`c[0, 1] 
+   Mechanics`LAGR`xs[1, 0, 1]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9F83yocXmm/dgQAHPWrpQ==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Q2\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"-", "1.`"}], " ", 
+     RowBox[{"k", "[", 
+      RowBox[{"2", ",", "3"}], "]"}], " ", 
+     SuperscriptBox[
+      RowBox[{"q", "[", "3", "]"}], "2"], " ", 
+     RowBox[{"qd", "[", "2", "]"}]}], "-", 
+    RowBox[{"1.`", " ", "g", " ", "r", " ", 
+     RowBox[{"m", "[", "2", "]"}], " ", 
+     RowBox[{"Sin", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}]}], "-", 
+    RowBox[{"1.`", " ", "g", " ", "r", " ", 
+     RowBox[{"m", "[", "3", "]"}], " ", 
+     RowBox[{"Sin", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}]}], "+", 
+    RowBox[{"1.`", " ", "g", " ", 
+     RowBox[{"m", "[", "3", "]"}], " ", 
+     RowBox[{"q", "[", "3", "]"}], " ", 
+     RowBox[{"Sin", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}]}]}]}],
+  SequenceForm[
+  "Q2", " = ", -Mechanics`LAGR`k[2, 3] Mechanics`LAGR`q[3]^2 
+    Mechanics`LAGR`qd[2] - 1. $CellContext`g $CellContext`r 
+   Mechanics`LAGR`m[2] Sin[
+     Mechanics`LAGR`q[2]] - 1. $CellContext`g $CellContext`r 
+   Mechanics`LAGR`m[3] Sin[
+     Mechanics`LAGR`q[2]] + 
+   1. $CellContext`g Mechanics`LAGR`m[3] Mechanics`LAGR`q[3] Sin[
+      Mechanics`LAGR`q[2]]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9F83yocXmm/dgQAHPWrpQ==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Q3\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"-", "1.`"}], " ", 
+     RowBox[{"c", "[", 
+      RowBox[{"2", ",", "3"}], "]"}], " ", 
+     RowBox[{"lambda", "[", 
+      RowBox[{"2", ",", "3"}], "]"}]}], "-", 
+    RowBox[{"1.`", " ", "g", " ", 
+     RowBox[{"Cos", "[", 
+      RowBox[{"q", "[", "2", "]"}], "]"}], " ", 
+     RowBox[{"m", "[", "3", "]"}]}], "-", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"c", "[", 
+      RowBox[{"2", ",", "3"}], "]"}], " ", 
+     RowBox[{"q", "[", "3", "]"}]}], "-", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"k", "[", 
+      RowBox[{"2", ",", "3"}], "]"}], " ", 
+     RowBox[{"qd", "[", "3", "]"}]}], "+", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"c", "[", 
+      RowBox[{"2", ",", "3"}], "]"}], " ", 
+     RowBox[{"xs", "[", 
+      RowBox[{"2", ",", "3", ",", "2"}], "]"}]}]}]}],
+  SequenceForm[
+  "Q3", " = ", -Mechanics`LAGR`c[2, 3] Mechanics`LAGR`lambda[2, 3] - 
+   1. $CellContext`g Cos[
+     Mechanics`LAGR`q[2]] Mechanics`LAGR`m[3] - 1. Mechanics`LAGR`c[2, 3] 
+   Mechanics`LAGR`q[3] - 1. Mechanics`LAGR`k[2, 3] Mechanics`LAGR`qd[3] + 
+   1. Mechanics`LAGR`c[2, 3] Mechanics`LAGR`xs[2, 3, 2]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9F83yocXmm/dgQAHPWrpQ==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Potential of Springs\"\>", "\[InvisibleSpace]", "\<\" = \"\>", 
+   "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{"1.`", " ", 
+     RowBox[{"c", "[", 
+      RowBox[{"0", ",", "1"}], "]"}], " ", 
+     RowBox[{"lambda", "[", 
+      RowBox[{"0", ",", "1"}], "]"}], " ", 
+     RowBox[{"q", "[", "1", "]"}]}], "+", 
+    RowBox[{"0.5`", " ", 
+     RowBox[{"c", "[", 
+      RowBox[{"0", ",", "1"}], "]"}], " ", 
+     SuperscriptBox[
+      RowBox[{"q", "[", "1", "]"}], "2"]}], "+", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"c", "[", 
+      RowBox[{"0", ",", "1"}], "]"}], " ", 
+     RowBox[{"lambda", "[", 
+      RowBox[{"0", ",", "1"}], "]"}], " ", 
+     RowBox[{"xs", "[", 
+      RowBox[{"1", ",", "0", ",", "1"}], "]"}]}], "+", 
+    RowBox[{"1.`", " ", 
+     RowBox[{"c", "[", 
+      RowBox[{"0", ",", "1"}], "]"}], " ", 
+     RowBox[{"q", "[", "1", "]"}], " ", 
+     RowBox[{"xs", "[", 
+      RowBox[{"1", ",", "0", ",", "1"}], "]"}]}], "+", 
+    RowBox[{"0.5`", " ", 
+     RowBox[{"c", "[", 
+      RowBox[{"0", ",", "1"}], "]"}], " ", 
+     SuperscriptBox[
+      RowBox[{"xs", "[", 
+       RowBox[{"1", ",", "0", ",", "1"}], "]"}], "2"]}]}]}],
+  SequenceForm[
+  "Potential of Springs", " = ", 
+   1. Mechanics`LAGR`c[0, 1] Mechanics`LAGR`lambda[0, 1] Mechanics`LAGR`q[1] + 
+   0.5 Mechanics`LAGR`c[0, 1] Mechanics`LAGR`q[1]^2 + 
+   1. Mechanics`LAGR`c[0, 1] Mechanics`LAGR`lambda[0, 1] 
+    Mechanics`LAGR`xs[1, 0, 1] + 
+   1. Mechanics`LAGR`c[0, 1] Mechanics`LAGR`q[1] Mechanics`LAGR`xs[1, 0, 1] + 
+   0.5 Mechanics`LAGR`c[0, 1] Mechanics`LAGR`xs[1, 0, 1]^2],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9F83yocXmm/dgQAHPWrpQ==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Generalized Force of Dampers 1\"\>", 
+   "\[InvisibleSpace]", "\<\" = \"\>", "\[InvisibleSpace]", "0"}],
+  SequenceForm["Generalized Force of Dampers 1", " = ", 0],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9F83yocXmm/dgQAHPWrpQ==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Generalized Force of Dampers 2\"\>", 
+   "\[InvisibleSpace]", "\<\" = \"\>", "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{"-", "1.`"}], " ", 
+    RowBox[{"k", "[", 
+     RowBox[{"2", ",", "3"}], "]"}], " ", 
+    SuperscriptBox[
+     RowBox[{"q", "[", "3", "]"}], "2"], " ", 
+    RowBox[{"qd", "[", "2", "]"}]}]}],
+  SequenceForm[
+  "Generalized Force of Dampers 2", " = ", -Mechanics`LAGR`k[2, 3] 
+   Mechanics`LAGR`q[3]^2 Mechanics`LAGR`qd[2]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9F83yocXmm/dgQAHPWrpQ==
+  "]],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Generalized Force of Dampers 3\"\>", 
+   "\[InvisibleSpace]", "\<\" = \"\>", "\[InvisibleSpace]", 
+   RowBox[{
+    RowBox[{"-", "1.`"}], " ", 
+    RowBox[{"k", "[", 
+     RowBox[{"2", ",", "3"}], "]"}], " ", 
+    RowBox[{"qd", "[", "3", "]"}]}]}],
+  SequenceForm[
+  "Generalized Force of Dampers 3", " = ", -Mechanics`LAGR`k[2, 3] 
+   Mechanics`LAGR`qd[3]],
+  Editable->False]], "Print",
+ CellChangeTimes->CompressedData["
+1:eJxTTMoPSmVkYGDQAuJnPjssGDe/crQuCZsKon+dcHeUANJ8UnNSQDRzntIK
+ED298yKrJJCOe14WBaLXeWzvAtEKqqFLQHRZfsZvEH15m5GEEpD+5hCRDqJv
+xbVuBdHumetugej8z0u+gOgZTBVpykC6tGBWDYjOEeXOUgHSotMN+zSB9ESO
+sOcg2kco4akjkF7R8jLcCUgn65ou8QHSW1gTWgz2vHLkaUsTNATS8S9sWYOA
+9I2CaV4gusv/2MYaIH1BTDu2GUife7y7GEQHsSS/XQqk/9RsZV8GpFu4Dr8H
+0cviZfqfAumQZf+Pg+iZSyacjd3/ytF/2f6KuOuvHAXerduZAKSXZZoxJwLp
+kG872VZzvnbkSkqQA9F83yocXmm/dgQAHPWrpQ==
+  "]]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{863, 992},
+WindowMargins->{{430, Automatic}, {Automatic, 54}},
+PrivateNotebookOptions->{"VersionedStylesheet"->{"Default.nb"[8.] -> False}},
+ShowSelection->True,
+FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (July 1, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "Info3628950959-8644209"->{
+  Cell[9025, 185, 283, 5, 58, "Print",
+   CellTags->"Info3628950959-8644209"]},
+ "Info3628951104-8644209"->{
+  Cell[12038, 252, 312, 5, 75, "Print",
+   CellTags->"Info3628951104-8644209"]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"Info3628950959-8644209", 144959, 3542},
+ {"Info3628951104-8644209", 145068, 3545}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[545, 20, 6612, 112, 2284, "Input"],
+Cell[CellGroupData[{
+Cell[7182, 136, 318, 5, 31, "Input"],
+Cell[CellGroupData[{
+Cell[7525, 145, 245, 3, 23, "Print"],
+Cell[7773, 150, 221, 3, 23, "Print"],
+Cell[7997, 155, 233, 3, 23, "Print"]
+}, Open  ]],
+Cell[8245, 161, 565, 14, 64, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[8847, 180, 175, 3, 31, "Input"],
+Cell[9025, 185, 283, 5, 58, "Print",
+ CellTags->"Info3628950959-8644209"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[9345, 195, 207, 3, 31, "Input"],
+Cell[CellGroupData[{
+Cell[9577, 202, 1146, 19, 35, "Print"],
+Cell[10726, 223, 1146, 19, 35, "Print"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[11921, 248, 114, 2, 31, "Input"],
+Cell[12038, 252, 312, 5, 75, "Print",
+ CellTags->"Info3628951104-8644209"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[12387, 262, 169, 3, 31, "Input"],
+Cell[CellGroupData[{
+Cell[12581, 269, 665, 14, 23, "Print"],
+Cell[13249, 285, 669, 14, 23, "Print"],
+Cell[13921, 301, 673, 14, 23, "Print"],
+Cell[14597, 317, 977, 23, 23, "Print"],
+Cell[15577, 342, 1091, 25, 23, "Print"],
+Cell[16671, 369, 737, 16, 23, "Print"],
+Cell[17411, 387, 973, 23, 23, "Print"],
+Cell[18387, 412, 1737, 42, 43, "Print"],
+Cell[20127, 456, 1699, 41, 23, "Print"],
+Cell[21829, 499, 2249, 56, 43, "Print"],
+Cell[24081, 557, 973, 23, 23, "Print"],
+Cell[25057, 582, 2291, 56, 43, "Print"],
+Cell[27351, 640, 2515, 60, 43, "Print"],
+Cell[29869, 702, 2573, 64, 43, "Print"],
+Cell[32445, 768, 973, 23, 23, "Print"],
+Cell[33421, 793, 667, 14, 23, "Print"],
+Cell[34091, 809, 2045, 53, 43, "Print"],
+Cell[36139, 864, 667, 14, 23, "Print"],
+Cell[36809, 880, 1753, 43, 43, "Print"],
+Cell[38565, 925, 679, 14, 23, "Print"],
+Cell[39247, 941, 1896, 47, 43, "Print"],
+Cell[41146, 990, 509, 9, 43, "Print"],
+Cell[41658, 1001, 498, 9, 43, "Print"],
+Cell[42159, 1012, 925, 23, 23, "Print"],
+Cell[43087, 1037, 1349, 31, 23, "Print"],
+Cell[44439, 1070, 1919, 46, 43, "Print"],
+Cell[46361, 1118, 838, 20, 23, "Print"],
+Cell[47202, 1140, 639, 14, 23, "Print"],
+Cell[47844, 1156, 488, 9, 23, "Print"],
+Cell[48335, 1167, 716, 16, 23, "Print"],
+Cell[49054, 1185, 1559, 39, 23, "Print"],
+Cell[50616, 1226, 645, 14, 23, "Print"],
+Cell[51264, 1242, 488, 9, 23, "Print"],
+Cell[51755, 1253, 645, 14, 23, "Print"],
+Cell[52403, 1269, 488, 9, 23, "Print"],
+Cell[52894, 1280, 645, 14, 23, "Print"],
+Cell[53542, 1296, 488, 9, 23, "Print"],
+Cell[54033, 1307, 645, 14, 23, "Print"],
+Cell[54681, 1323, 488, 9, 23, "Print"],
+Cell[55172, 1334, 1374, 32, 23, "Print"],
+Cell[56549, 1368, 645, 14, 23, "Print"],
+Cell[57197, 1384, 488, 9, 23, "Print"],
+Cell[57688, 1395, 645, 14, 23, "Print"],
+Cell[58336, 1411, 488, 9, 23, "Print"],
+Cell[58827, 1422, 844, 20, 23, "Print"],
+Cell[59674, 1444, 645, 14, 23, "Print"],
+Cell[60322, 1460, 488, 9, 23, "Print"],
+Cell[60813, 1471, 1982, 47, 23, "Print"],
+Cell[62798, 1520, 645, 14, 23, "Print"],
+Cell[63446, 1536, 488, 9, 23, "Print"],
+Cell[63937, 1547, 645, 14, 23, "Print"],
+Cell[64585, 1563, 488, 9, 23, "Print"],
+Cell[65076, 1574, 645, 14, 23, "Print"],
+Cell[65724, 1590, 488, 9, 23, "Print"],
+Cell[66215, 1601, 645, 14, 23, "Print"],
+Cell[66863, 1617, 488, 9, 23, "Print"],
+Cell[67354, 1628, 645, 14, 23, "Print"],
+Cell[68002, 1644, 488, 9, 23, "Print"],
+Cell[68493, 1655, 645, 14, 23, "Print"],
+Cell[69141, 1671, 488, 9, 23, "Print"],
+Cell[69632, 1682, 645, 14, 23, "Print"],
+Cell[70280, 1698, 488, 9, 23, "Print"],
+Cell[70771, 1709, 943, 23, 23, "Print"],
+Cell[71717, 1734, 645, 14, 23, "Print"],
+Cell[72365, 1750, 488, 9, 23, "Print"],
+Cell[72856, 1761, 1047, 25, 23, "Print"],
+Cell[73906, 1788, 645, 14, 23, "Print"],
+Cell[74554, 1804, 488, 9, 23, "Print"],
+Cell[75045, 1815, 645, 14, 23, "Print"],
+Cell[75693, 1831, 488, 9, 23, "Print"],
+Cell[76184, 1842, 645, 14, 23, "Print"],
+Cell[76832, 1858, 488, 9, 23, "Print"],
+Cell[77323, 1869, 645, 14, 23, "Print"],
+Cell[77971, 1885, 488, 9, 23, "Print"],
+Cell[78462, 1896, 924, 22, 23, "Print"],
+Cell[79389, 1920, 645, 14, 23, "Print"],
+Cell[80037, 1936, 488, 9, 23, "Print"],
+Cell[80528, 1947, 645, 14, 23, "Print"],
+Cell[81176, 1963, 488, 9, 23, "Print"],
+Cell[81667, 1974, 645, 14, 23, "Print"],
+Cell[82315, 1990, 488, 9, 23, "Print"],
+Cell[82806, 2001, 645, 14, 23, "Print"],
+Cell[83454, 2017, 488, 9, 23, "Print"],
+Cell[83945, 2028, 1304, 33, 23, "Print"],
+Cell[85252, 2063, 1737, 43, 23, "Print"],
+Cell[86992, 2108, 1718, 43, 23, "Print"],
+Cell[88713, 2153, 2084, 52, 43, "Print"],
+Cell[90800, 2207, 693, 14, 23, "Print"],
+Cell[91496, 2223, 975, 23, 23, "Print"],
+Cell[92474, 2248, 886, 21, 23, "Print"],
+Cell[93363, 2271, 662, 14, 43, "Print"],
+Cell[94028, 2287, 862, 20, 23, "Print"],
+Cell[94893, 2309, 1349, 31, 23, "Print"],
+Cell[96245, 2342, 1634, 39, 23, "Print"],
+Cell[97882, 2383, 838, 20, 23, "Print"],
+Cell[98723, 2405, 639, 14, 23, "Print"],
+Cell[99365, 2421, 488, 9, 23, "Print"],
+Cell[99856, 2432, 716, 16, 23, "Print"],
+Cell[100575, 2450, 1280, 31, 23, "Print"],
+Cell[101858, 2483, 645, 14, 23, "Print"],
+Cell[102506, 2499, 488, 9, 23, "Print"],
+Cell[102997, 2510, 645, 14, 23, "Print"],
+Cell[103645, 2526, 488, 9, 23, "Print"],
+Cell[104136, 2537, 645, 14, 23, "Print"],
+Cell[104784, 2553, 488, 9, 23, "Print"],
+Cell[105275, 2564, 645, 14, 23, "Print"],
+Cell[105923, 2580, 488, 9, 23, "Print"],
+Cell[106414, 2591, 1370, 32, 23, "Print"],
+Cell[107787, 2625, 641, 14, 23, "Print"],
+Cell[108431, 2641, 484, 9, 23, "Print"],
+Cell[108918, 2652, 641, 14, 23, "Print"],
+Cell[109562, 2668, 484, 9, 23, "Print"],
+Cell[110049, 2679, 840, 20, 23, "Print"],
+Cell[110892, 2701, 641, 14, 23, "Print"],
+Cell[111536, 2717, 484, 9, 23, "Print"],
+Cell[112023, 2728, 1978, 47, 23, "Print"],
+Cell[114004, 2777, 641, 14, 23, "Print"],
+Cell[114648, 2793, 484, 9, 23, "Print"],
+Cell[115135, 2804, 641, 14, 23, "Print"],
+Cell[115779, 2820, 484, 9, 23, "Print"],
+Cell[116266, 2831, 641, 14, 23, "Print"],
+Cell[116910, 2847, 484, 9, 23, "Print"],
+Cell[117397, 2858, 641, 14, 23, "Print"],
+Cell[118041, 2874, 484, 9, 23, "Print"],
+Cell[118528, 2885, 641, 14, 23, "Print"],
+Cell[119172, 2901, 484, 9, 23, "Print"],
+Cell[119659, 2912, 645, 14, 23, "Print"],
+Cell[120307, 2928, 488, 9, 23, "Print"],
+Cell[120798, 2939, 645, 14, 23, "Print"],
+Cell[121446, 2955, 488, 9, 23, "Print"],
+Cell[121937, 2966, 943, 23, 23, "Print"],
+Cell[122883, 2991, 645, 14, 23, "Print"],
+Cell[123531, 3007, 488, 9, 23, "Print"],
+Cell[124022, 3018, 1047, 25, 23, "Print"],
+Cell[125072, 3045, 645, 14, 23, "Print"],
+Cell[125720, 3061, 488, 9, 23, "Print"],
+Cell[126211, 3072, 645, 14, 23, "Print"],
+Cell[126859, 3088, 488, 9, 23, "Print"],
+Cell[127350, 3099, 645, 14, 23, "Print"],
+Cell[127998, 3115, 488, 9, 23, "Print"],
+Cell[128489, 3126, 645, 14, 23, "Print"],
+Cell[129137, 3142, 488, 9, 23, "Print"],
+Cell[129628, 3153, 924, 22, 23, "Print"],
+Cell[130555, 3177, 645, 14, 23, "Print"],
+Cell[131203, 3193, 488, 9, 23, "Print"],
+Cell[131694, 3204, 645, 14, 23, "Print"],
+Cell[132342, 3220, 488, 9, 23, "Print"],
+Cell[132833, 3231, 645, 14, 23, "Print"],
+Cell[133481, 3247, 488, 9, 23, "Print"],
+Cell[133972, 3258, 645, 14, 23, "Print"],
+Cell[134620, 3274, 488, 9, 23, "Print"],
+Cell[135111, 3285, 1304, 33, 23, "Print"],
+Cell[136418, 3320, 1737, 43, 23, "Print"],
+Cell[138158, 3365, 1718, 43, 23, "Print"],
+Cell[139879, 3410, 2084, 52, 43, "Print"],
+Cell[141966, 3464, 693, 14, 23, "Print"],
+Cell[142662, 3480, 975, 23, 23, "Print"],
+Cell[143640, 3505, 886, 21, 23, "Print"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

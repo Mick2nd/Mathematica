@@ -1,0 +1,196 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 9.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      5784,        187]
+NotebookOptionsPosition[      4378,        134]
+NotebookOutlinePosition[      5166,        163]
+CellTagsIndexPosition[      5002,        156]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{"<<", "\"\<QuantumMechanics`\>\""}]], "Input",
+ CellChangeTimes->{{3.646892268139164*^9, 3.6468923169554877`*^9}, 
+   3.646900816507827*^9, {3.6469209124810677`*^9, 3.6469209329514055`*^9}, {
+   3.6469218651336803`*^9, 3.6469218680089197`*^9}}],
+
+Cell[BoxData["\<\"Application Quantum Mechanics\"\>"], "Print",
+ CellChangeTimes->{
+  3.646920933982733*^9, {3.646921844991479*^9, 3.6469218697590394`*^9}, 
+   3.646921985564971*^9, 3.6469250264618807`*^9, 3.646925099733234*^9, 
+   3.646925393318692*^9, 3.646925425321195*^9, 3.6469255174846525`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"d", "[", 
+  RowBox[{
+   RowBox[{"Conjugate", "[", 
+    RowBox[{"f", "[", "x", "]"}], "]"}], ",", "x"}], "]"}]], "Input",
+ CellChangeTimes->{{3.6468923715378785`*^9, 3.646892402337177*^9}}],
+
+Cell[BoxData[
+ RowBox[{"Conjugate", "[", 
+  RowBox[{
+   SuperscriptBox["f", "\[Prime]",
+    MultilineFunction->None], "[", "x", "]"}], "]"}]], "Output",
+ CellChangeTimes->{3.6468924038685284`*^9, 3.646892528222003*^9, 
+  3.646900908922106*^9, 3.6469026074846873`*^9, 3.646912709954604*^9, 
+  3.6469129708031297`*^9, 3.6469131903828*^9, 3.646913239621025*^9, 
+  3.646913448856138*^9, 3.646913844777726*^9, 3.6469144176819057`*^9, 
+  3.646914622396758*^9, 3.646914729545763*^9, 3.646915241820201*^9, 
+  3.646915341296728*^9, 3.646915458790292*^9, 3.646915496433861*^9, 
+  3.646915799598195*^9, 3.6469207403113375`*^9, 3.6469207976751986`*^9, 
+  3.6469218805567584`*^9, 3.646921988127673*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "d"}]], "Input",
+ CellChangeTimes->{{3.6469208219739895`*^9, 3.6469208253648634`*^9}}],
+
+Cell[BoxData[
+ StyleBox["\<\"Used like the built-in function D, \\nbut implements a better \
+solution for embbeded Conjugate calls,\\nprovided the function depends on \
+real parameters\"\>", "MSG"]], "Print", "PrintUsage",
+ CellChangeTimes->{3.6469219905653615`*^9},
+ CellTags->"Info3646929190-6819530"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "eigenKets"}]], "Input",
+ CellChangeTimes->{{3.646920844288226*^9, 3.6469208557266164`*^9}}],
+
+Cell[BoxData[
+ StyleBox["\<\"Calculates the Eigen Kets of an Operator given in matrix \
+form\"\>", "MSG"]], "Print", "PrintUsage",
+ CellChangeTimes->{3.6469219926123996`*^9},
+ CellTags->"Info3646929192-6819530"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "spin"}]], "Input",
+ CellChangeTimes->{{3.646925440275508*^9, 3.6469254419162617`*^9}}],
+
+Cell[BoxData[
+ StyleBox["\<\"Dirac Matrix for x,y,z direction, use Subscript notation\"\>", 
+  "MSG"]], "Print", "PrintUsage",
+ CellChangeTimes->{3.6469255290011797`*^9},
+ CellTags->"Info3646932728-9737111"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Subscript", "[", 
+   RowBox[{"spin", ",", "3"}], "]"}], "//", "MatrixForm"}]], "Input",
+ CellChangeTimes->{{3.646925031446643*^9, 3.646925039134762*^9}, {
+  3.6469254012099524`*^9, 3.6469254019600105`*^9}}],
+
+Cell[BoxData[
+ TagBox[
+  RowBox[{"(", "\[NoBreak]", GridBox[{
+     {
+      FractionBox["h", "2"], "0"},
+     {"0", 
+      RowBox[{"-", 
+       FractionBox["h", "2"]}]}
+    },
+    GridBoxAlignment->{
+     "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, "Rows" -> {{Baseline}}, 
+      "RowsIndexed" -> {}},
+    GridBoxSpacings->{"Columns" -> {
+        Offset[0.27999999999999997`], {
+         Offset[0.7]}, 
+        Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+        Offset[0.2], {
+         Offset[0.4]}, 
+        Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+  Function[BoxForm`e$, 
+   MatrixForm[BoxForm`e$]]]], "Output",
+ CellChangeTimes->{
+  3.646925040587983*^9, 3.6469251509716153`*^9, {3.6469254035538683`*^9, 
+   3.646925429430893*^9}, 3.646925538001884*^9}]
+}, Open  ]]
+},
+WindowSize->{707, 867},
+WindowMargins->{{598, Automatic}, {Automatic, 98}},
+FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (July 1, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "Info3646929190-6819530"->{
+  Cell[2244, 65, 303, 5, 75, "Print",
+   CellTags->"Info3646929190-6819530"]},
+ "Info3646929192-6819530"->{
+  Cell[2707, 79, 211, 4, 40, "Print",
+   CellTags->"Info3646929192-6819530"]},
+ "Info3646932728-9737111"->{
+  Cell[3073, 92, 207, 4, 40, "Print",
+   CellTags->"Info3646932728-9737111"]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"Info3646929190-6819530", 4684, 144},
+ {"Info3646929192-6819530", 4792, 147},
+ {"Info3646932728-9737111", 4900, 150}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 267, 4, 31, "Input"],
+Cell[849, 28, 300, 4, 23, "Print"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1186, 37, 212, 5, 31, "Input"],
+Cell[1401, 44, 689, 12, 31, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2127, 61, 114, 2, 31, "Input"],
+Cell[2244, 65, 303, 5, 75, "Print",
+ CellTags->"Info3646929190-6819530"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2584, 75, 120, 2, 31, "Input"],
+Cell[2707, 79, 211, 4, 40, "Print",
+ CellTags->"Info3646929192-6819530"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2955, 88, 115, 2, 31, "Input"],
+Cell[3073, 92, 207, 4, 40, "Print",
+ CellTags->"Info3646932728-9737111"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3317, 101, 241, 5, 31, "Input"],
+Cell[3561, 108, 801, 23, 133, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

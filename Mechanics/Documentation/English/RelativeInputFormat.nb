@@ -1,0 +1,387 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     16366,        378]
+NotebookOptionsPosition[     14019,        310]
+NotebookOutlinePosition[     14873,        338]
+CellTagsIndexPosition[     14830,        335]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Relative Input Format", "Section",
+ CellChangeTimes->{{3.628925912000821*^9, 3.628925919767047*^9}}],
+
+Cell["\<\
+For this input format one needs a reference body. In the kinematic tree \
+structure each body originates directly or indirectly from this body having \
+by convention the number 0.
+The input obeys these sequence:\
+\>", "Text",
+ CellChangeTimes->{{3.628926354363233*^9, 3.628926491514318*^9}, {
+  3.628926546409153*^9, 3.6289265485655394`*^9}, {3.6289267033429775`*^9, 
+  3.628926945189522*^9}, {3.628929256990748*^9, 3.628929258115821*^9}, {
+  3.6289297309813147`*^9, 3.628929743607277*^9}, {3.628932949687559*^9, 
+  3.62893295100016*^9}, {3.628933437415636*^9, 3.628933472590195*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Number of rigid bodies (Integer)", "ItemNumbered"]], \
+"ItemNumbered",
+ CellChangeTimes->{{3.6289295224966855`*^9, 3.62892956562496*^9}, {
+  3.628932974642568*^9, 3.628932977533434*^9}}],
+
+Cell[TextData[StyleBox["Degrees of freedom (Integer)", "ItemNumbered"]], \
+"ItemNumbered",
+ CellChangeTimes->{{3.6289295224966855`*^9, 3.6289295827044024`*^9}, {
+  3.6289329824244146`*^9, 3.6289329825337977`*^9}}],
+
+Cell[TextData[StyleBox["Flag indicating that the motion is meant relative - \
+True", "ItemNumbered"]], "ItemNumbered",
+ CellChangeTimes->{{3.6289295224966855`*^9, 3.62892958615779*^9}, {
+  3.6289309333285747`*^9, 3.628930935723836*^9}}],
+
+Cell[TextData[StyleBox["Motion of body 0 - the reference body - this can be a \
+function of time", "ItemNumbered"]], "ItemNumbered",
+ CellChangeTimes->{{3.6289295224966855`*^9, 3.6289295954553585`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Rotation matrix of body 0 in ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " list format"
+}], "SubitemNumbered",
+ CellChangeTimes->{{3.6289296377867107`*^9, 3.6289296847434263`*^9}}],
+
+Cell[TextData[{
+ "Origin vector of body 0 in ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " list format"
+}], "SubitemNumbered",
+ CellChangeTimes->{{3.6289296377867107`*^9, 3.628929716339589*^9}}]
+}, Open  ]],
+
+Cell["Input for each of the rigid bodies in succession", "ItemNumbered",
+ CellChangeTimes->{{3.6289298607412004`*^9, 3.6289299091355343`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+The reference body of this body - one of the previous bodies (Integer)\
+\[LineSeparator]All kinematic quantities are relative to this body\
+\[CloseCurlyQuote]s reference frame\
+\>", "SubitemNumbered",
+ CellChangeTimes->{{3.6289298607412004`*^9, 3.6289299091355343`*^9}, {
+   3.628929994576436*^9, 3.628930052414319*^9}, {3.628930412160492*^9, 
+   3.6289304308181667`*^9}, {3.6289305082759914`*^9, 3.628930565900132*^9}, 
+   3.6289309607682714`*^9}],
+
+Cell[TextData[{
+ "Rotation matrix of this body in ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " list format"
+}], "SubitemNumbered",
+ CellChangeTimes->{{3.6289298607412004`*^9, 3.6289299091355343`*^9}, {
+  3.628929994576436*^9, 3.6289301256699114`*^9}}],
+
+Cell[TextData[{
+ "Distance vector of this body in ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " list format\[LineSeparator]Points from fixed point of reference body to \
+fixed point of this body"
+}], "SubitemNumbered",
+ CellChangeTimes->{{3.6289298607412004`*^9, 3.6289299091355343`*^9}, {
+  3.628929994576436*^9, 3.628930170892104*^9}, {3.6289302083480844`*^9, 
+  3.628930251929531*^9}}],
+
+Cell["\<\
+Fixed point of reference body (in reference body coordinates)\
+\>", "SubitemNumbered",
+ CellChangeTimes->{{3.6289298607412004`*^9, 3.6289299091355343`*^9}, {
+  3.628929994576436*^9, 3.628930170892104*^9}, {3.6289302083480844`*^9, 
+  3.628930341889513*^9}}],
+
+Cell["Fixed point of this body (in this body\[CloseCurlyQuote]s \
+coordinates)", "SubitemNumbered",
+ CellChangeTimes->{{3.6289298607412004`*^9, 3.6289299091355343`*^9}, {
+  3.628929994576436*^9, 3.628930170892104*^9}, {3.6289302083480844`*^9, 
+  3.6289303849865484`*^9}, {3.628930595255161*^9, 3.628930595255161*^9}}],
+
+Cell["\<\
+A flag (True or False) indicating whether forces and moments follow\
+\>", "SubitemNumbered",
+ CellChangeTimes->{{3.6289298607412004`*^9, 3.6289299091355343`*^9}, {
+  3.628929994576436*^9, 3.628930170892104*^9}, {3.6289302083480844`*^9, 
+  3.6289303849865484`*^9}, {3.628930595255161*^9, 3.6289306330393057`*^9}, {
+  3.6289306635572453`*^9, 3.6289306689639235`*^9}}],
+
+Cell["\<\
+The Force vector in the case of True\[LineSeparator]We need the components \
+relative to the outer reference frame\[LineSeparator]One can use the rotation \
+matrix En to calculate these components, see sample file\
+\>", "SubitemNumbered",
+ CellChangeTimes->{{3.6289298607412004`*^9, 3.6289299091355343`*^9}, {
+  3.628929994576436*^9, 3.628930170892104*^9}, {3.6289302083480844`*^9, 
+  3.6289303849865484`*^9}, {3.628930595255161*^9, 3.6289306330393057`*^9}, {
+  3.6289306635572453`*^9, 3.6289306875278225`*^9}, {3.628933049882678*^9, 
+  3.6289331027929645`*^9}, {3.6289331623321714`*^9, 3.628933211351533*^9}, {
+  3.6289332466354723`*^9, 3.6289332535422473`*^9}}],
+
+Cell["\<\
+The Moment vector in the case of True\[LineSeparator]We need the components \
+relative to the outer reference frame\
+\>", "SubitemNumbered",
+ CellChangeTimes->{{3.6289298607412004`*^9, 3.6289299091355343`*^9}, {
+  3.628929994576436*^9, 3.628930170892104*^9}, {3.6289302083480844`*^9, 
+  3.6289303849865484`*^9}, {3.628930595255161*^9, 3.6289306330393057`*^9}, {
+  3.6289306635572453`*^9, 3.628930702138322*^9}, {3.6289312168346496`*^9, 
+  3.628931216850274*^9}, {3.628933111074856*^9, 3.628933116481508*^9}}]
+}, Open  ]],
+
+Cell["Number of linear springs to follow (Integer)", "ItemNumbered",
+ CellChangeTimes->{{3.6289298607412004`*^9, 3.6289299091355343`*^9}, {
+  3.628929994576436*^9, 3.628930170892104*^9}, {3.6289302083480844`*^9, 
+  3.6289303849865484`*^9}, {3.628930595255161*^9, 3.6289306330393057`*^9}, {
+  3.6289306635572453`*^9, 3.628930702138322*^9}, {3.6289312168346496`*^9, 
+  3.628931250430976*^9}, {3.6289313893009377`*^9, 3.6289313913792048`*^9}}],
+
+Cell["Input for each linear spring in succession", "ItemNumbered",
+ CellChangeTimes->{{3.6289298607412004`*^9, 3.6289299091355343`*^9}, {
+  3.628929994576436*^9, 3.628930170892104*^9}, {3.6289302083480844`*^9, 
+  3.6289303849865484`*^9}, {3.628930595255161*^9, 3.6289306330393057`*^9}, {
+  3.6289306635572453`*^9, 3.628930702138322*^9}, {3.6289312168346496`*^9, 
+  3.62893128685561*^9}, {3.6289313966296206`*^9, 3.62893139892667*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["body 1 connected with spring", "SubitemNumbered",
+ CellChangeTimes->{{3.6289298607412004`*^9, 3.6289299091355343`*^9}, {
+  3.628929994576436*^9, 3.628930170892104*^9}, {3.6289302083480844`*^9, 
+  3.6289303849865484`*^9}, {3.628930595255161*^9, 3.6289306330393057`*^9}, {
+  3.6289306635572453`*^9, 3.628930702138322*^9}, {3.6289312168346496`*^9, 
+  3.62893128685561*^9}, {3.6289313595330443`*^9, 3.6289314166623974`*^9}}],
+
+Cell["body 2 connected with spring", "SubitemNumbered",
+ CellChangeTimes->{{3.6289298607412004`*^9, 3.6289299091355343`*^9}, {
+  3.628929994576436*^9, 3.628930170892104*^9}, {3.6289302083480844`*^9, 
+  3.6289303849865484`*^9}, {3.628930595255161*^9, 3.6289306330393057`*^9}, {
+  3.6289306635572453`*^9, 3.628930702138322*^9}, {3.6289312168346496`*^9, 
+  3.62893128685561*^9}, {3.6289313595330443`*^9, 3.6289314422112036`*^9}}],
+
+Cell[TextData[{
+ "A ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " list of replacement rules\[LineSeparator]One can specify for instance the \
+spring\[CloseCurlyQuote]s origin points or the spring \
+constant\[LineSeparator]Example: { xs[1, 0, 2]->0 }"
+}], "SubitemNumbered",
+ CellChangeTimes->{{3.6289298607412004`*^9, 3.6289299091355343`*^9}, {
+  3.628929994576436*^9, 3.628930170892104*^9}, {3.6289302083480844`*^9, 
+  3.6289303849865484`*^9}, {3.628930595255161*^9, 3.6289306330393057`*^9}, {
+  3.6289306635572453`*^9, 3.628930702138322*^9}, {3.6289312168346496`*^9, 
+  3.62893128685561*^9}, {3.6289313595330443`*^9, 3.628931470744629*^9}, {
+  3.62893152106098*^9, 3.6289316371635804`*^9}, {3.6289319464190583`*^9, 
+  3.6289319464190583`*^9}}],
+
+Cell[TextData[{
+ "A ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " list of Assumptions"
+}], "SubitemNumbered",
+ CellChangeTimes->{{3.6289298607412004`*^9, 3.6289299091355343`*^9}, {
+  3.628929994576436*^9, 3.628930170892104*^9}, {3.6289302083480844`*^9, 
+  3.6289303849865484`*^9}, {3.628930595255161*^9, 3.6289306330393057`*^9}, {
+  3.6289306635572453`*^9, 3.628930702138322*^9}, {3.6289312168346496`*^9, 
+  3.62893128685561*^9}, {3.6289313595330443`*^9, 3.628931470744629*^9}, {
+  3.62893152106098*^9, 3.6289316371635804`*^9}, {3.6289319464190583`*^9, 
+  3.628931978655907*^9}}]
+}, Open  ]],
+
+Cell["Number of linear dampers to follow (Integer)", "ItemNumbered",
+ CellChangeTimes->{{3.6289298607412004`*^9, 3.6289299091355343`*^9}, {
+  3.628929994576436*^9, 3.628930170892104*^9}, {3.6289302083480844`*^9, 
+  3.6289303849865484`*^9}, {3.628930595255161*^9, 3.6289306330393057`*^9}, {
+  3.6289306635572453`*^9, 3.628930702138322*^9}, {3.6289312168346496`*^9, 
+  3.62893128685561*^9}, {3.6289313595330443`*^9, 3.628931470744629*^9}, {
+  3.62893152106098*^9, 3.6289316371635804`*^9}, {3.6289319464190583`*^9, 
+  3.6289320116896563`*^9}}],
+
+Cell["Input for each linear damper in succession", "ItemNumbered",
+ CellChangeTimes->{{3.6289298607412004`*^9, 3.6289299091355343`*^9}, {
+  3.628929994576436*^9, 3.628930170892104*^9}, {3.6289302083480844`*^9, 
+  3.6289303849865484`*^9}, {3.628930595255161*^9, 3.6289306330393057`*^9}, {
+  3.6289306635572453`*^9, 3.628930702138322*^9}, {3.6289312168346496`*^9, 
+  3.62893128685561*^9}, {3.6289313595330443`*^9, 3.628931470744629*^9}, {
+  3.62893152106098*^9, 3.6289316371635804`*^9}, {3.6289319464190583`*^9, 
+  3.628932033160043*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["body 1 connected with damper", "SubitemNumbered",
+ CellChangeTimes->{{3.6289298607412004`*^9, 3.6289299091355343`*^9}, {
+  3.628929994576436*^9, 3.628930170892104*^9}, {3.6289302083480844`*^9, 
+  3.6289303849865484`*^9}, {3.628930595255161*^9, 3.6289306330393057`*^9}, {
+  3.6289306635572453`*^9, 3.628930702138322*^9}, {3.6289312168346496`*^9, 
+  3.62893128685561*^9}, {3.6289313595330443`*^9, 3.628931470744629*^9}, {
+  3.62893152106098*^9, 3.6289316371635804`*^9}, {3.6289319464190583`*^9, 
+  3.628932051614577*^9}}],
+
+Cell["body 2 connected with damper", "SubitemNumbered",
+ CellChangeTimes->{{3.6289298607412004`*^9, 3.6289299091355343`*^9}, {
+  3.628929994576436*^9, 3.628930170892104*^9}, {3.6289302083480844`*^9, 
+  3.6289303849865484`*^9}, {3.628930595255161*^9, 3.6289306330393057`*^9}, {
+  3.6289306635572453`*^9, 3.628930702138322*^9}, {3.6289312168346496`*^9, 
+  3.62893128685561*^9}, {3.6289313595330443`*^9, 3.628931470744629*^9}, {
+  3.62893152106098*^9, 3.6289316371635804`*^9}, {3.6289319464190583`*^9, 
+  3.628932071694233*^9}}],
+
+Cell[TextData[{
+ "A ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " list of replacement rules\[LineSeparator]One can specify for instance the \
+damper\[CloseCurlyQuote]s origin points or the damper \
+constant\[LineSeparator]Example: { xd[3, 2, 3]->0 }"
+}], "SubitemNumbered",
+ CellChangeTimes->{{3.6289298607412004`*^9, 3.6289299091355343`*^9}, {
+  3.628929994576436*^9, 3.628930170892104*^9}, {3.6289302083480844`*^9, 
+  3.6289303849865484`*^9}, {3.628930595255161*^9, 3.6289306330393057`*^9}, {
+  3.6289306635572453`*^9, 3.628930702138322*^9}, {3.6289312168346496`*^9, 
+  3.62893128685561*^9}, {3.6289313595330443`*^9, 3.628931470744629*^9}, {
+  3.62893152106098*^9, 3.6289316371635804`*^9}, {3.6289319464190583`*^9, 
+  3.6289321761084414`*^9}}]
+}, Open  ]],
+
+Cell["\<\
+Number of special cases to follow (Integer)\[LineSeparator]Using this feature \
+one can specify parameter substitutions for an arbitrary number of cases\
+\>", "ItemNumbered",
+ CellChangeTimes->{{3.6289298607412004`*^9, 3.6289299091355343`*^9}, {
+  3.628929994576436*^9, 3.628930170892104*^9}, {3.6289302083480844`*^9, 
+  3.6289303849865484`*^9}, {3.628930595255161*^9, 3.6289306330393057`*^9}, {
+  3.6289306635572453`*^9, 3.628930702138322*^9}, {3.6289312168346496`*^9, 
+  3.62893128685561*^9}, {3.6289313595330443`*^9, 3.628931470744629*^9}, {
+  3.62893152106098*^9, 3.6289316371635804`*^9}, {3.6289319464190583`*^9, 
+  3.6289323209007435`*^9}}],
+
+Cell["Input for each case in succession", "ItemNumbered",
+ CellChangeTimes->{{3.6289298607412004`*^9, 3.6289299091355343`*^9}, {
+  3.628929994576436*^9, 3.628930170892104*^9}, {3.6289302083480844`*^9, 
+  3.6289303849865484`*^9}, {3.628930595255161*^9, 3.6289306330393057`*^9}, {
+  3.6289306635572453`*^9, 3.628930702138322*^9}, {3.6289312168346496`*^9, 
+  3.62893128685561*^9}, {3.6289313595330443`*^9, 3.628931470744629*^9}, {
+  3.62893152106098*^9, 3.6289316371635804`*^9}, {3.6289319464190583`*^9, 
+  3.628932360200596*^9}}],
+
+Cell[TextData[{
+ "A ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " list of replacement rules\[LineSeparator]Example: { m[1]->0, \[Theta][3, \
+1, 1]->0 }"
+}], "SubitemNumbered",
+ CellChangeTimes->{{3.6289298607412004`*^9, 3.6289299091355343`*^9}, {
+  3.628929994576436*^9, 3.628930170892104*^9}, {3.6289302083480844`*^9, 
+  3.6289303849865484`*^9}, {3.628930595255161*^9, 3.6289306330393057`*^9}, {
+  3.6289306635572453`*^9, 3.628930702138322*^9}, {3.6289312168346496`*^9, 
+  3.62893128685561*^9}, {3.6289313595330443`*^9, 3.628931470744629*^9}, {
+  3.62893152106098*^9, 3.6289316371635804`*^9}, {3.6289319464190583`*^9, 
+  3.628932448316702*^9}}]
+}, Open  ]]
+}, Open  ]]
+},
+Editable->False,
+WindowSize->{783, 911},
+WindowMargins->{{560, Automatic}, {Automatic, 95}},
+FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (July 1, 2014)",
+StyleDefinitions->Notebook[{
+   Cell[
+    StyleData[StyleDefinitions -> "Default.nb"]], 
+   Cell[
+    StyleData["ItemNumbered"], CounterBoxOptions -> {BaseStyle -> Automatic}], 
+   Cell[
+    StyleData["SubitemNumbered"], 
+    CounterBoxOptions -> {BaseStyle -> Automatic}], 
+   Cell[
+    StyleData["SubsubitemNumbered"], 
+    CounterBoxOptions -> {BaseStyle -> Automatic}]}, Visible -> False, 
+  FrontEndVersion -> "10.0 for Microsoft Windows (64-bit) (July 1, 2014)", 
+  StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 106, 1, 70, "Section"],
+Cell[689, 25, 594, 10, 68, "Text"],
+Cell[CellGroupData[{
+Cell[1308, 39, 210, 3, 30, "ItemNumbered"],
+Cell[1521, 44, 213, 3, 30, "ItemNumbered"],
+Cell[1737, 49, 236, 3, 30, "ItemNumbered"],
+Cell[1976, 54, 202, 2, 30, "ItemNumbered"],
+Cell[CellGroupData[{
+Cell[2203, 60, 207, 6, 24, "SubitemNumbered"],
+Cell[2413, 68, 203, 6, 24, "SubitemNumbered"]
+}, Open  ]],
+Cell[2631, 77, 142, 1, 30, "ItemNumbered"],
+Cell[CellGroupData[{
+Cell[2798, 82, 458, 8, 41, "SubitemNumbered"],
+Cell[3259, 92, 261, 7, 24, "SubitemNumbered"],
+Cell[3523, 101, 397, 9, 41, "SubitemNumbered"],
+Cell[3923, 112, 266, 5, 24, "SubitemNumbered"],
+Cell[4192, 119, 317, 4, 24, "SubitemNumbered"],
+Cell[4512, 125, 375, 6, 24, "SubitemNumbered"],
+Cell[4890, 133, 673, 10, 58, "SubitemNumbered"],
+Cell[5566, 145, 518, 8, 41, "SubitemNumbered"]
+}, Open  ]],
+Cell[6099, 156, 440, 5, 30, "ItemNumbered"],
+Cell[6542, 163, 434, 5, 30, "ItemNumbered"],
+Cell[CellGroupData[{
+Cell[7001, 172, 426, 5, 24, "SubitemNumbered"],
+Cell[7430, 179, 426, 5, 24, "SubitemNumbered"],
+Cell[7859, 186, 754, 14, 58, "SubitemNumbered"],
+Cell[8616, 202, 588, 12, 24, "SubitemNumbered"]
+}, Open  ]],
+Cell[9219, 217, 540, 7, 30, "ItemNumbered"],
+Cell[9762, 226, 536, 7, 30, "ItemNumbered"],
+Cell[CellGroupData[{
+Cell[10323, 237, 525, 7, 24, "SubitemNumbered"],
+Cell[10851, 246, 525, 7, 24, "SubitemNumbered"],
+Cell[11379, 255, 754, 14, 58, "SubitemNumbered"]
+}, Open  ]],
+Cell[12148, 272, 656, 10, 47, "ItemNumbered"],
+Cell[12807, 284, 527, 7, 30, "ItemNumbered"],
+Cell[13337, 293, 654, 13, 41, "SubitemNumbered"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

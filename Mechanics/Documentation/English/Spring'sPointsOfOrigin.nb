@@ -1,0 +1,66 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      1723,         57]
+NotebookOptionsPosition[      1391,         40]
+NotebookOutlinePosition[      1756,         56]
+CellTagsIndexPosition[      1713,         53]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Spring\[CloseCurlyQuote]s Points of Origin", "Section",
+ CellChangeTimes->{{3.62886742150005*^9, 3.628867433375019*^9}}],
+
+Cell["\<\
+Symbol\t\txs
+Meaning\t\tthe origin vector of a spring related to one of the connected bodies
+Usage\t\t\tused as parameter in output, can be substituted by rules
+Specification\t\txs[body1, body2, i] - coordinate i of origin at body1 \
+connected with body2
+Example\t\txs[1, 0, 1]\
+\>", "Text",
+ CellChangeTimes->{{3.6288674472343693`*^9, 3.62886753460911*^9}, {
+  3.628867570968375*^9, 3.6288676004057765`*^9}, {3.628867885623683*^9, 
+  3.628867891717407*^9}, {3.628867965139061*^9, 3.628867986092127*^9}, {
+  3.6288680976386867`*^9, 3.628868143982298*^9}, {3.6288681921227655`*^9, 
+  3.6288682557944484`*^9}, {3.628876546457201*^9, 3.6288765469103203`*^9}}]
+}, Open  ]]
+},
+Editable->False,
+WindowSize->{Medium, Small},
+WindowMargins->{{559, Automatic}, {196, Automatic}},
+FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (July 1, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 126, 1, 70, "Section"],
+Cell[709, 25, 666, 12, 106, "Text"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

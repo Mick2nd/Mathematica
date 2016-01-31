@@ -1,0 +1,128 @@
+(*
+    This is the system from the Diploma Work with
+    - 3 bodies
+    - 3 degrees of freedom
+    - relative description of movement
+    - 2 springs
+    - 1 damper
+    - gravity force
+*)
+
+3
+3
+True
+
+(*--------------------------------------------------------------------*)
+
+{{1.,0.,0.},			(* Rotation Matrix body 0 *)
+ {0.,1.,0.},
+ {0.,0.,1.}}
+
+{fu[q[0]],0.,0.}		(* Origin of body 0 *)
+
+(*--------------------------------------------------------------------*)
+
+0						(* Relation body of body 1 *)
+
+{{1.,0.,0.},			(* Relative Rotation matrix *)
+ {0.,1.,0.},
+ {0.,0.,1.}}
+
+{q[1],0.,0.}			(* Distance vector *)
+
+{0.,0.,0.}				(* Fixed point body 0 *)
+
+{0.,0.,0.}				(* Fixed point body 1 *)
+
+False					(* No Forces and Moments *)
+
+(*--------------------------------------------------------------------*)
+
+1						(* Relation body of body 2 *)
+
+{{Cos[q[2]], Sin[q[2]],0.},	(* Relative Rotation matrix *)
+ {-Sin[q[2]],Cos[q[2]],0.},
+ {0.,        0.,       1.}}
+
+{0.,0.,0.}				(* Distance vector *)
+
+{0.,0.,0.}				(* Fixed point body 1 *)
+
+{0.,r,0.}				(* Fixed point body 2 *)
+
+True					(* Forces and Moments input *)
+
+{En[2][[2,1]] * c[2,3] * (lambda[2,3] + q[3] - xs[2,3,2]),
+ En[2][[2,2]] * c[2,3] * (lambda[2,3] + q[3] - xs[2,3,2]) - m[2] * g,
+0.}
+
+{0.,0.,0.}
+
+(*--------------------------------------------------------------------*)
+
+2						(* Relation body of body 3 *)
+
+{{1.,0.,0.},			(* Relative Rotation matrix *)
+ {0.,1.,0.},
+ {0.,0.,1.}}
+
+{0.,q[3],0.}			(* Distance vector *)
+
+{0.,0.,0.}				(* Fixed point body 2 *)
+
+{0.,0.,0.}				(* Fixed point body 3 *)
+
+True					(* Forces and Moments input *)
+
+{-1.0 * En[3][[2,1]] * c[2,3] * (lambda[2,3] + q[3] - xs[2,3,2]),
+ -1.0 * En[3][[2,2]] * c[2,3] * (lambda[2,3] + q[3] - xs[2,3,2]) - m[3] * g,
+0.}
+
+{0.,0.,0.}
+
+(*--------------------------------------------------------------------*)
+
+1						(* Springs *)
+
+0
+1
+{
+xs[0,1,1]->0,
+xs[0,1,2]->0,
+xs[0,1,3]->0,
+xs[1,0,2]->0,
+xs[1,0,3]->0
+}
+{
+Assumptions->-1.0*q[1]-1.0*xs[1,0,1]>0
+}
+
+(*--------------------------------------------------------------------*)
+
+
+1						(* Dampers *)
+
+2
+3
+{
+xd[3,2,1]->0,
+xd[3,2,2]->0,
+xd[3,2,3]->0,
+xd[2,3,1]->0,
+xd[2,3,2]->0,
+xd[2,3,3]->0
+}
+
+(*--------------------------------------------------------------------*)
+
+1						(* Special Cases *)
+
+{
+m[1]->0,
+\[Theta][3,1,1]->0,
+\[Theta][3,1,2]->0,
+\[Theta][3,1,3]->0,
+\[Theta][3,2,2]->0,
+\[Theta][3,2,3]->0,
+\[Theta][3,3,3]->0
+}

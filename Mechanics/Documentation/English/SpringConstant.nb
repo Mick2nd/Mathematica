@@ -1,0 +1,64 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      1517,         55]
+NotebookOptionsPosition[      1186,         38]
+NotebookOutlinePosition[      1550,         54]
+CellTagsIndexPosition[      1507,         51]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Spring Constant", "Section",
+ CellChangeTimes->{{3.6288663386170254`*^9, 3.628866344226368*^9}}],
+
+Cell["\<\
+Symbol\t\tc
+Meaning\t\tconstant of a linear spring as in F = c s
+Usage\t\t\tused as parameter in output, can be substituted by rules
+Specification\t\tc[body1, body2] where body1 and body2 are the 2 bodies \
+connected by the spring
+Example\t\tc[0, 1] - special body 0 can be the resting frame\
+\>", "Text",
+ CellChangeTimes->{{3.628866368679418*^9, 3.6288665017727747`*^9}, {
+  3.628866587850644*^9, 3.6288666247411594`*^9}, {3.628866674131638*^9, 
+  3.6288667810375853`*^9}}]
+}, Open  ]]
+},
+Editable->False,
+WindowSize->{Medium, Small},
+WindowMargins->{{560, Automatic}, {Automatic, 95}},
+FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (July 1, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 102, 1, 70, "Section"],
+Cell[685, 25, 485, 10, 106, "Text"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

@@ -1,0 +1,63 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      1428,         54]
+NotebookOptionsPosition[      1099,         37]
+NotebookOutlinePosition[      1463,         53]
+CellTagsIndexPosition[      1420,         50]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Generalized Coordinates", "Section",
+ CellChangeTimes->{{3.62884338726195*^9, 3.6288433994494104`*^9}, {
+  3.6288434421836586`*^9, 3.628843471214822*^9}}],
+
+Cell["\<\
+Symbol\t\tq
+Meaning\t\tGeneralized coordinates
+Usage\t\t\tIn input and output as independent variables
+Specification\t\tq[1], q[2], ... , q[f] where f are the degrees of freedom, \
+use q[0] for time t\
+\>", "Text",
+ CellChangeTimes->{{3.628843486339781*^9, 3.628843704823504*^9}, {
+  3.62892341317037*^9, 3.6289234267963934`*^9}}]
+}, Open  ]]
+},
+Editable->False,
+WindowSize->{Medium, Small},
+WindowMargins->{{560, Automatic}, {Automatic, 95}},
+FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (July 1, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 160, 2, 70, "Section"],
+Cell[743, 26, 340, 8, 87, "Text"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

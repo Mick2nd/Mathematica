@@ -1,0 +1,63 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      1481,         54]
+NotebookOptionsPosition[      1151,         37]
+NotebookOutlinePosition[      1515,         53]
+CellTagsIndexPosition[      1472,         50]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Damper\[CloseCurlyQuote]s Points of Origin", "Section",
+ CellChangeTimes->{{3.6288763720827217`*^9, 3.6288763877858124`*^9}}],
+
+Cell["\<\
+Symbol\t\txd
+Meaning\t\tthe origin vector of a damper related to one of the connected bodies
+Usage\t\t\tused as parameter in output, can be substituted by rules
+Specification\t\txd[body1, body2, i] - coordinate i of origin at body1 \
+connected with body2
+Example\t\txd[2, 3, 2]\
+\>", "Text",
+ CellChangeTimes->{{3.6288764044888725`*^9, 3.6288766071757736`*^9}, {
+  3.62887664947252*^9, 3.6288766528318996`*^9}}]
+}, Open  ]]
+},
+Editable->False,
+WindowSize->{Medium, Small},
+WindowMargins->{{560, Automatic}, {Automatic, 95}},
+FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (July 1, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 131, 1, 70, "Section"],
+Cell[714, 25, 421, 9, 106, "Text"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
